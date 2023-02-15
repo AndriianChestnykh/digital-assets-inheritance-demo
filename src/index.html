@@ -28,8 +28,6 @@
             </div>
         </header>
 
-        <!--Owner connect-->
-
         <div class="container-fluid">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -48,15 +46,18 @@
                     </button>
                 </li>
             </ul>
-            <div class="tab-content" id="myTabContent">
+            <div class="tab-content" id="ownerTabContent">
+
+                <!--Owner-->
+
                 <div class="tab-pane fade show active" id="owner-tab-pane" role="tabpanel" aria-labelledby="owner-tab"
                      tabindex="0">
                     <div>
                         <button
                                 class="btn btn-primary btn-lg btn-block mb-3"
-                                id="connectButton"
+                                id="ownerConnectButton"
                                 disabled>
-                            Connect
+                            Connect Owner
                         </button>
                         <div class="row">
                             <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -94,8 +95,8 @@
 
                         </div>
                             <div class="mb-3">
-                                <label for="inputAddr" class="form-label">Heir address</label>
-                                <input type="text" class="form-control" id="inputAddr" value="0x70997970C51812dc3A010C7d01b50e0d17dc79C8">
+                                <label for="heirAddress" class="form-label">Heir address</label>
+                                <input type="text" class="form-control" id="heirAddress" value="0x70997970C51812dc3A010C7d01b50e0d17dc79C8">
                             </div>
                         </div>
 
@@ -109,16 +110,42 @@
 
                         <div class="mb-3">
                             <label for="signTypedDataResult" class="form-label">Sign Typed Data Result:</label>
-                            <textarea class="form-control" id="signTypedDataResult" rows="3"></textarea>
+                            <textarea class="form-control" id="signTypedDataResult" rows="30"></textarea>
                         </div>
 
                     </div>
+                </div>
+            </div>
+
+            <!--Oracle-->
+
+            <div class="tab-content" id="oracleTabContent">
+                <div class="tab-pane fade" id="oracle-tab-pane" role="tabpanel" aria-labelledby="oracle-tab"
+                     tabindex="1">
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="oracleConnectButton"
+                            disabled>
+                        Connect Oracle
+                    </button>
+                </div>
+            </div>
+
+            <!--Heir-->
+
+            <div class="tab-content" id="heirTabContent">
+                <div  >
                     <div class="tab-pane fade" id="heir-tab-pane" role="tabpanel" aria-labelledby="heir-tab"
-                         tabindex="0">Heir
+                         tabindex="2">
+                        <button
+                                class="btn btn-primary btn-lg btn-block mb-3"
+                                id="heirConnectButton"
+                                disabled>
+                            Connect Heir
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"

@@ -21,7 +21,7 @@ const networkDiv = document.getElementById('network')
 const accountsDiv = document.getElementById('accounts')
 
 // Basic Actions Section
-const onboardButton = document.getElementById('connectButton')
+const ownerOnboardButton = document.getElementById('ownerConnectButton')
 
 // Contract Section
 const contractBalance = document.getElementById('contractBalance')
@@ -58,8 +58,8 @@ const initialize = async () => {
   const isMetaMaskConnected = () => accounts && accounts.length > 0
 
   const onClickInstall = () => {
-    onboardButton.innerText = 'Onboarding in progress'
-    onboardButton.disabled = true
+    ownerOnboardButton.innerText = 'Onboarding in progress'
+    ownerOnboardButton.disabled = true
     onboarding.startOnboarding()
   }
 
@@ -86,19 +86,19 @@ const initialize = async () => {
     }
 
     if (!isMetaMaskInstalled()) {
-      onboardButton.innerText = 'Click here to install MetaMask!'
-      onboardButton.onclick = onClickInstall
-      onboardButton.disabled = false
+      ownerOnboardButton.innerText = 'Click here to install MetaMask!'
+      ownerOnboardButton.onclick = onClickInstall
+      ownerOnboardButton.disabled = false
     } else if (isMetaMaskConnected()) {
-      onboardButton.innerText = 'Connected'
-      onboardButton.disabled = true
+      ownerOnboardButton.innerText = 'Connected'
+      ownerOnboardButton.disabled = true
       if (onboarding) {
         onboarding.stopOnboarding()
       }
     } else {
-      onboardButton.innerText = 'Connect'
-      onboardButton.onclick = onClickConnect
-      onboardButton.disabled = false
+      ownerOnboardButton.innerText = 'Connect'
+      ownerOnboardButton.onclick = onClickConnect
+      ownerOnboardButton.disabled = false
     }
   }
 
@@ -135,8 +135,8 @@ const initialize = async () => {
       })
 
       const owner = provider.getSigner(_accounts[0])
-      const inputAddr = document.getElementById('inputAddr')
-      const heir = provider.getSigner(inputAddr.value)
+      const heirAddress = document.getElementById('heirAddress')
+      const heir = provider.getSigner(heirAddress.value)
 
       const typedData = {
         types: {
@@ -159,8 +159,7 @@ const initialize = async () => {
       try {
         const result2 = await owner._signTypedData(typedData.domain, typedData.types, typedData.message)
 
-        signTypedDataResults.innerHTML = `
-          ${JSON.stringify(typedData, null, 2)}
+        signTypedDataResults.innerHTML = `${JSON.stringify(typedData, null, 2)}
           \n\nSignature\n${JSON.stringify(result2, null, 2)}`
 
       } catch (err) {
