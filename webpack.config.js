@@ -12,7 +12,7 @@ module.exports = {
       directory: DIST
     },
     compress: true,
-    port: 9000,
+    port: 9010,
   },
   output: {
     filename: 'bundle.js',
