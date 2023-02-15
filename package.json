@@ -1,0 +1,32 @@
+{
+  "name": "digital-assets-inheritance-demo",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server",
+    "start:with:wallet:deploy": "npm run hardhat:deploy && npm run start",
+    "test": "test",
+    "build": "webpack",
+    "hardhat:node": "hardhat node",
+    "hardhat:compile": "hardhat compile",
+    "hardhat:deploy": "hardhat run scripts/deploy.js --network localhost",
+    "hardhat:test": "hardhat test",
+    "hardhat:test:gas": "REPORT_GAS=true hardhat test"
+  },
+  "author": "Andriian Chestnykh",
+  "license": "MIT",
+  "devDependencies": {
+    "@metamask/onboarding": "^1.0.1",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "@openzeppelin/contracts": "^4.8.1",
+    "copy-webpack-plugin": "^11.0.0",
+    "eth-sig-util": "^3.0.1",
+    "hardhat": "^2.12.7",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "serve": "^14.2.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  }
+}
