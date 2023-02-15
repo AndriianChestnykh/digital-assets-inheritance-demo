@@ -3,10 +3,10 @@ import MetaMaskOnboarding from '@metamask/onboarding'
 import { ethers } from 'ethers'
 
 import WalletArtifact from '../artifacts/contracts/Wallet.sol/Wallet.json'
-import { address } from './walletAddress.json'
+import DeployInfo from './deployInfo.json'
 
 const { abi: walletAbi, bytecode: walletBytecode } = WalletArtifact
-let walletAddress = address
+let walletAddress = DeployInfo.walletAddress
 const currentUrl = new URL(window.location.href)
 const forwarderOrigin = currentUrl.hostname === 'localhost'
   ? 'http://localhost:9010'

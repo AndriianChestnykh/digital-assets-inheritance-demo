@@ -9,14 +9,16 @@ const fs = require('fs');
 const path = require("path");
 
 const DIST = path.resolve(__dirname, "../src");
+const DEPLOY_INFO_FILE = "deployInfo.json"
+const WALLET_CONTRACT = "Wallet";
 
 async function main() {
   const controler = (await hre.ethers.getSigners())[0].address;
+
   const gracePeriodBlocks = 10;
 
   const walletAmount = hre.ethers.utils.parseEther("1");
-
-  const Wallet = await hre.ethers.getContractFactory("Wallet");
+  const Wallet = await hre.ethers.getContractFactory(WALLET_CONTRACT);
   const wallet = await Wallet.deploy(controler, gracePeriodBlocks, { value: walletAmount });
 
   await wallet.deployed();
@@ -25,7 +27,7 @@ async function main() {
     `Wallet contract deployed to ${wallet.address}`
   );
 
-  fs.writeFileSync(path.resolve(DIST, "walletAddress.json"), JSON.stringify({ address: wallet.address }));
+  fs.writeFileSync(path.resolve(DIST, DEPLOY_INFO_FILE), JSON.stringify({ walletAddress: wallet.address }));
 }
 
 // We recommend this pattern to be able to use async/await everywhere
