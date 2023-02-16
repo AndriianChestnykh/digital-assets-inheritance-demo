@@ -6,7 +6,7 @@ const DIST = path.resolve(__dirname, 'dist')
 
 module.exports = {
   mode: "development",
-  entry: './src/index.js',
+  entry: path.resolve(__dirname, 'src/index.js'),
   devServer: {
     static: {
       directory: DIST
@@ -23,7 +23,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: 'src/*',
+          from: path.resolve(__dirname, 'src/*'),
           to: path.resolve(DIST, "[name][ext]"),
           globOptions: {
             ignore: ['**/*.js'],

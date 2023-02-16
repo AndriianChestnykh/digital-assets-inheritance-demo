@@ -8,7 +8,7 @@ const hre = require("hardhat");
 const fs = require('fs');
 const path = require("path");
 
-const DIST = path.resolve(__dirname, "../src");
+const DIST = path.resolve(__dirname, "..");
 const DEPLOY_INFO_FILE = "deployInfo.json"
 const WALLET_CONTRACT = "Wallet";
 

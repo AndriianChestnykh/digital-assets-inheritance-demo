@@ -1,8 +1,8 @@
 import MetaMaskOnboarding from '@metamask/onboarding'
 import { ethers } from 'ethers'
 
-import WalletArtifact from '../artifacts/contracts/Wallet.sol/Wallet.json'
-import DeployInfo from './deployInfo.json'
+import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
+import DeployInfo from '../../../deployInfo.json'
 
 const { abi: walletAbi } = WalletArtifact
 let walletAddress = DeployInfo.walletAddress
