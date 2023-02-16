@@ -16,17 +16,19 @@ const isMetaMaskInstalled = () => {
   return Boolean(ethereum && ethereum.isMetaMask)
 }
 
-// Dapp Status Section
+// Network Section
 const networkDiv = document.getElementById('network')
-const accountsDiv = document.getElementById('accounts')
+
+// Account Section
+const accountsAddressDiv = document.getElementById('accountAddress')
+const accountBalance = document.getElementById('accountBalance')
 
 // Basic Actions Section
-const ownerOnboardButton = document.getElementById('ownerConnectButton')
+const connectButton = document.getElementById('connectButton')
 
-// Contract Section
-const contractBalance = document.getElementById('contractBalance')
-const ownerCtrBalance = document.getElementById('ownerCtrBalance')
-const walletAccountDiv = document.getElementById('walletAccount')
+// Wallet Section
+const walletAddressDiv = document.getElementById('walletAddress')
+const walletBalance = document.getElementById('walletBalance')
 
 // Send Eth Section
 const sendButton = document.getElementById('sendButton')
@@ -50,7 +52,7 @@ const initialize = async () => {
   let accounts
   let accountButtonsInitialized = false
 
-  const accountButtons = [
+  const buttons = [
     sendButton,
     signTypedData,
   ]
@@ -58,8 +60,8 @@ const initialize = async () => {
   const isMetaMaskConnected = () => accounts && accounts.length > 0
 
   const onClickInstall = () => {
-    ownerOnboardButton.innerText = 'Onboarding in progress'
-    ownerOnboardButton.disabled = true
+    connectButton.innerText = 'Onboarding in progress'
+    connectButton.disabled = true
     onboarding.startOnboarding()
   }
 
@@ -76,29 +78,24 @@ const initialize = async () => {
 
   const updateButtons = () => {
     const accountButtonsDisabled = !isMetaMaskInstalled() || !isMetaMaskConnected()
-    if (accountButtonsDisabled) {
-      for (const button of accountButtons) {
-        button.disabled = true
-      }
-    } else {
-      sendButton.disabled = false
-      signTypedData.disabled = false
+    for (const button of buttons) {
+      button.disabled = accountButtonsDisabled
     }
 
     if (!isMetaMaskInstalled()) {
-      ownerOnboardButton.innerText = 'Click here to install MetaMask!'
-      ownerOnboardButton.onclick = onClickInstall
-      ownerOnboardButton.disabled = false
+      connectButton.innerText = 'Click here to install MetaMask!'
+      connectButton.onclick = onClickInstall
+      connectButton.disabled = false
     } else if (isMetaMaskConnected()) {
-      ownerOnboardButton.innerText = 'Connected'
-      ownerOnboardButton.disabled = true
+      connectButton.innerText = 'Connected'
+      connectButton.disabled = true
       if (onboarding) {
         onboarding.stopOnboarding()
       }
     } else {
-      ownerOnboardButton.innerText = 'Connect'
-      ownerOnboardButton.onclick = onClickConnect
-      ownerOnboardButton.disabled = false
+      connectButton.innerText = 'Connect'
+      connectButton.onclick = onClickConnect
+      connectButton.disabled = false
     }
   }
 
@@ -127,14 +124,12 @@ const initialize = async () => {
 
     signTypedData.onclick = async () => {
       const networkId = parseInt(networkDiv.innerHTML, 10)
-      // const chainId = parseInt(chainIdDiv.innerHTML, 10) || networkId
       const chainId = 31337 || networkId
-      // const owner = provider.getSigner('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
       const _accounts = await ethereum.request({
         method: 'eth_accounts',
       })
 
-      const owner = provider.getSigner(_accounts[0])
+      const signer = provider.getSigner(_accounts[0])
       const heirAddress = document.getElementById('heirAddress')
       const heir = provider.getSigner(heirAddress.value)
 
@@ -157,7 +152,7 @@ const initialize = async () => {
       }
 
       try {
-        const result2 = await owner._signTypedData(typedData.domain, typedData.types, typedData.message)
+        const result2 = await signer._signTypedData(typedData.domain, typedData.types, typedData.message)
 
         signTypedDataResults.innerHTML = `${JSON.stringify(typedData, null, 2)}
           \n\nSignature\n${JSON.stringify(result2, null, 2)}`
@@ -171,7 +166,7 @@ const initialize = async () => {
 
   function handleNewAccounts (newAccounts) {
     accounts = newAccounts
-    accountsDiv.innerHTML = accounts
+    accountsAddressDiv.innerHTML = accounts
     if (isMetaMaskConnected()) {
       initializeAccountButtons()
     }
@@ -179,7 +174,7 @@ const initialize = async () => {
   }
 
   function getWalletAddress () {
-    walletAccountDiv.innerHTML = wallet.address
+    walletAddressDiv.innerHTML = wallet.address
   }
 
   function handleNewNetwork (networkId) {
@@ -203,7 +198,7 @@ const initialize = async () => {
         method: 'eth_accounts',
       })
       const balance = await provider.getBalance(accounts[0])
-      ownerCtrBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
+      accountBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
     } catch (err) {
       console.error(err)
     }
@@ -212,7 +207,7 @@ const initialize = async () => {
   async function getWalletBalance () {
     try {
       const balance = await provider.getBalance(wallet.address)
-      contractBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
+      walletBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
     } catch (err) {
       console.error(err)
     }
@@ -249,6 +244,7 @@ const initialize = async () => {
   }
 
   updateButtons()
+
   if (isMetaMaskInstalled()) {
 
     ethereum.autoRefreshOnNetworkChange = false
