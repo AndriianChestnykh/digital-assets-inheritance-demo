@@ -30,63 +30,66 @@
         </header>
 
         <div class="container-fluid">
+            <button
+                    class="btn btn-primary btn-lg btn-block mb-3"
+                    id="connectButton"
+                    disabled>
+                Connect
+            </button>
+
+            <div class="row">
+                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <p class="info-text alert alert-primary">
+                        Network: <span id="network"></span>
+                    </p>
+                </div>
+
+                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <p class="info-text alert alert-success">
+                        <b>Wallet:</b><br/>
+                        Address: <span id="walletAddress"></span><br/>
+                        Balance: <span id="walletBalance"></span>
+                    </p>
+                </div>
+
+                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <p class="info-text alert alert-success">
+                        <b>Account:</b><br/>
+                        Address: <span id="accountAddress"></span><br/>
+                        Balance: <span id="accountBalance">Undefined</span>
+                    </p>
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="sendButton"
+                            disabled
+                    >
+                        Send 0.1 Ether
+                    </button>
+                </div>
+            </div>
+
             <div>
-                <button
-                        class="btn btn-primary btn-lg btn-block mb-3"
-                        id="connectButton"
-                        disabled>
-                    Connect
-                </button>
-                <div class="row">
-                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                        <p class="info-text alert alert-primary">
-                            Network: <span id="network"></span>
-                        </p>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                        <p class="info-text alert alert-success">
-                            <b>Wallet:</b><br/>
-                            Address: <span id="walletAddress"></span><br/>
-                            Balance: <span id="walletBalance"></span>
-                        </p>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                        <p class="info-text alert alert-success">
-                            <b>Owner:</b><br/>
-                            Address: <span id="accountAddress"></span><br/>
-                            Balance: <span id="accountBalance">Undefined</span>
-                        </p>
-                        <button
-                                class="btn btn-primary btn-lg btn-block mb-3"
-                                id="sendButton"
-                                disabled
-                        >
-                            Send 0.1 Ether
-                        </button>
-                    </div>
-                </div>
-                    <div class="mb-3">
-                        <label for="heirAddress" class="form-label">Heir address</label>
-                        <input type="text" class="form-control" id="heirAddress" value="0x70997970C51812dc3A010C7d01b50e0d17dc79C8">
-                    </div>
-                </div>
-
                 <button
                         class="btn btn-primary btn-lg btn-block mb-3"
                         id="signTypedData"
                         disabled
                 >
-                    Sign Inheritance Message
+                    Sign Inheritance Message for the heir address
                 </button>
 
                 <div class="mb-3">
-                    <label for="signTypedDataResult" class="form-label">Sign Typed Data Result:</label>
-                    <textarea class="form-control" id="signTypedDataResult" rows="30"></textarea>
+                    <p>
+                        <label for="heirAddress" class="form-label">Heir address</label>
+                        <input type="text" class="form-control" id="heirAddress" value="0x70997970C51812dc3A010C7d01b50e0d17dc79C8">
+                    </p>
                 </div>
 
+                <div class="mb-3">
+                    <label for="signTypedDataResult" class="form-label">Inheritance Message with signature:</label>
+                    <textarea class="form-control" id="signTypedDataResult" rows="30"></textarea>
+                </div>
             </div>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"

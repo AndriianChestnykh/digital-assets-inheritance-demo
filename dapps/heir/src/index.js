@@ -28,14 +28,14 @@ const connectButton = document.getElementById('connectButton')
 
 // Wallet Section
 const walletAddressDiv = document.getElementById('walletAddress')
-const walletBalance = document.getElementById('walletBalance')
+const walletBalanceDiv = document.getElementById('walletBalance')
 
 // Send Eth Section
 const sendButton = document.getElementById('sendButton')
 
 // Signed Type Data Section
-const signTypedData = document.getElementById('signTypedData')
-const signTypedDataResults = document.getElementById('signTypedDataResult')
+const processTypedData = document.getElementById('processTypedData')
+const signTypedDataResult = document.getElementById('signTypedDataResult')
 
 const initialize = async () => {
 
@@ -54,7 +54,7 @@ const initialize = async () => {
 
   const buttons = [
     sendButton,
-    signTypedData,
+    processTypedData,
   ]
 
   const isMetaMaskConnected = () => accounts && accounts.length > 0
@@ -119,47 +119,13 @@ const initialize = async () => {
     }
 
     /**
-     * Sign Typed Data
+     * Process Typed Data
      */
 
-    signTypedData.onclick = async () => {
-      const networkId = parseInt(networkDiv.innerHTML, 10)
-      const chainId = 31337 || networkId
-      const _accounts = await ethereum.request({
-        method: 'eth_accounts',
-      })
-
-      const signer = provider.getSigner(_accounts[0])
-      const heirAddress = document.getElementById('heirAddress')
-      const heir = provider.getSigner(heirAddress.value)
-
-      const typedData = {
-        types: {
-          InheritanceMessage: [
-            { name: 'heirAddress', type: 'address' },
-          ],
-        },
-        primaryType: 'InheritanceMessage',
-        domain: {
-          name: 'InheritanceMessage',
-          version: '1',
-          chainId,
-          verifyingContract: walletAddress,
-        },
-        message: {
-          heirAddress: heir._address,
-        },
-      }
-
-      try {
-        const result2 = await signer._signTypedData(typedData.domain, typedData.types, typedData.message)
-
-        signTypedDataResults.innerHTML = `${JSON.stringify(typedData, null, 2)}
-          \n\nSignature\n${JSON.stringify(result2, null, 2)}`
-
-      } catch (err) {
-        console.error(err)
-      }
+    processTypedData.onclick = async () => {
+      const imWithSignature = JSON.parse(signTypedDataResult.value);
+      walletAddress = imWithSignature.message.domain.verifyingContract;
+      prompt("Wallet address", walletAddress);
     }
 
   }
@@ -207,7 +173,7 @@ const initialize = async () => {
   async function getWalletBalance () {
     try {
       const balance = await provider.getBalance(wallet.address)
-      walletBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
+      walletBalanceDiv.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
     } catch (err) {
       console.error(err)
     }

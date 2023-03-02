@@ -35,7 +35,7 @@ const sendButton = document.getElementById('sendButton')
 
 // Signed Type Data Section
 const signTypedData = document.getElementById('signTypedData')
-const signTypedDataResults = document.getElementById('signTypedDataResult')
+const signTypedDataResult = document.getElementById('signTypedDataResult')
 
 const initialize = async () => {
 
@@ -133,7 +133,7 @@ const initialize = async () => {
       const heirAddress = document.getElementById('heirAddress')
       const heir = provider.getSigner(heirAddress.value)
 
-      const typedData = {
+      const im = {
         types: {
           InheritanceMessage: [
             { name: 'heirAddress', type: 'address' },
@@ -152,11 +152,14 @@ const initialize = async () => {
       }
 
       try {
-        const result2 = await signer._signTypedData(typedData.domain, typedData.types, typedData.message)
+        const imSignature = await signer._signTypedData(im.domain, im.types, im.message)
 
-        signTypedDataResults.innerHTML = `${JSON.stringify(typedData, null, 2)}
-          \n\nSignature\n${JSON.stringify(result2, null, 2)}`
+        const imWithSignature = {
+          message: im,
+          signature: imSignature,
+        }
 
+        signTypedDataResult.innerHTML = JSON.stringify(imWithSignature, null, 2)
       } catch (err) {
         console.error(err)
       }
