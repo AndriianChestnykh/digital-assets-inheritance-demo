@@ -126,6 +126,7 @@ const initialize = async () => {
       const imWithSignature = JSON.parse(signTypedDataResult.value);
       walletAddress = imWithSignature.message.domain.verifyingContract;
       prompt("Wallet address", walletAddress);
+      // TODO init inheritance on the wallet
     }
 
   }

@@ -27,7 +27,23 @@ async function main() {
     `Wallet contract deployed to ${wallet.address}`
   );
 
-  fs.writeFileSync(path.resolve(DIST, DEPLOY_INFO_FILE), JSON.stringify({ walletAddress: wallet.address }));
+  const Hub = await hre.ethers.getContractFactory("Hub");
+  const hub = await Hub.deploy();
+  hub.deployed();
+
+  await hub.deployed();
+
+  console.log(
+    `Hub contract deployed to ${hub.address}`
+  );
+
+  fs.writeFileSync(
+    path.resolve(DIST, DEPLOY_INFO_FILE),
+    JSON.stringify({
+      walletAddress: wallet.address,
+      hubAddress: hub.address
+    })
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
