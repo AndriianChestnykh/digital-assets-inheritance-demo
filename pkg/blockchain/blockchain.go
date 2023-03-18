@@ -74,3 +74,26 @@ func PublishMessage(hub *eth.Hub, message string, cfg *config.Config) error {
 	println("Transaction hash: ", tx.Hash().Hex())
 	return nil
 }
+
+func RealMessagePublishedEvents(hub *eth.Hub, cfg *config.Config) error {
+	ctx := context.Background()
+
+	end := uint64(2394201)
+
+	fo := &bind.FilterOpts{
+		Start:   0,
+		End:     &end,
+		Context: ctx,
+	}
+
+	logs, err := hub.HubFilterer.FilterMessagePublished(fo, []common.Address{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for logs.Next() {
+		println("Message published: ", logs.Event.Message)
+	}
+
+	return nil
+}

@@ -34,6 +34,12 @@ func main() {
 		log.Fatal("Error initializing publishing job: ", err)
 	}
 
+	_, err = s.Every(cfg.Scheduler.PublishStateTimer).SingletonMode().
+		Do(blockchain.RealMessagePublishedEvents, hub, cfg)
+	if err != nil {
+		log.Fatal("Error initializing read hub events job: ", err)
+	}
+
 	s.StartAsync()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
