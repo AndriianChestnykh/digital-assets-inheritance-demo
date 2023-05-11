@@ -25,10 +25,10 @@ type ETHClient interface {
 }
 
 // TransactionService blockchain tx service
-type TransactionService struct {
-	client                 ETHClient
-	confirmationBlockCount int64
-}
+//type TransactionService struct {
+//	client                 ETHClient
+//	confirmationBlockCount int64
+//}
 
 //// NewTransactionService new transaction service
 //func NewTransactionService(_client ETHClient, confirmationBlockCount int64) (*TransactionService, error) {
@@ -75,7 +75,7 @@ func PublishMessage(hub *eth.Hub, message string, cfg *config.Config) error {
 	return nil
 }
 
-func RealMessagePublishedEvents(hub *eth.Hub, cfg *config.Config) error {
+func ReadMessagePublishedEvents(hub *eth.Hub, cfg *config.Config) error {
 	ctx := context.Background()
 
 	end := uint64(2394201)

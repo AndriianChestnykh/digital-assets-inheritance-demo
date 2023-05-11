@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
 
 	"digital-assets-inheritance-demo/pkg/blockchain"
 	"digital-assets-inheritance-demo/pkg/config"
+	db2 "digital-assets-inheritance-demo/pkg/db"
 	"digital-assets-inheritance-demo/pkg/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -35,15 +37,41 @@ func main() {
 	}
 
 	_, err = s.Every(cfg.Scheduler.PublishStateTimer).SingletonMode().
-		Do(blockchain.RealMessagePublishedEvents, hub, cfg)
+		Do(blockchain.ReadMessagePublishedEvents, hub, cfg)
 	if err != nil {
 		log.Fatal("Error initializing read hub events job: ", err)
 	}
 
 	s.StartAsync()
 
+	db := db2.New()
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
+		switch r.Method {
+		case http.MethodGet:
+			_, err := fmt.Fprintf(w, db.Get())
+			if err != nil {
+				return
+			}
+		case http.MethodPost:
+			body, err := io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "Failed to read request", http.StatusInternalServerError)
+				return
+			}
+			db.Set(string(body))
+
+			w.WriteHeader(http.StatusOK)
+			_, err = w.Write([]byte("Data saved successfully:\n " + string(body)))
+			if err != nil {
+				return
+			}
+		default:
+			_, err := fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
+			if err != nil {
+				return
+			}
+		}
 	})
 
 	err = http.ListenAndServe(":8080", nil)
