@@ -30,11 +30,11 @@ func main() {
 	s := gocron.NewScheduler(time.UTC)
 	s.TagsUnique()
 
-	_, err = s.Every(cfg.Scheduler.PublishStateTimer).SingletonMode().
-		Do(blockchain.PublishMessage, hub, "test message!!", cfg)
-	if err != nil {
-		log.Fatal("Error initializing publishing job: ", err)
-	}
+	//_, err = s.Every(cfg.Scheduler.PublishStateTimer).SingletonMode().
+	//	Do(blockchain.PublishMessage, hub, "test message!!", cfg)
+	//if err != nil {
+	//	log.Fatal("Error initializing publishing job: ", err)
+	//}
 
 	_, err = s.Every(cfg.Scheduler.PublishStateTimer).SingletonMode().
 		Do(blockchain.ReadMessagePublishedEvents, hub, cfg)
@@ -47,12 +47,14 @@ func main() {
 	db := db2.New()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
 		switch r.Method {
 		case http.MethodGet:
 			_, err := fmt.Fprintf(w, db.Get())
 			if err != nil {
 				return
 			}
+			log.Println("Data requested successfully")
 		case http.MethodPost:
 			body, err := io.ReadAll(r.Body)
 			if err != nil {
@@ -62,10 +64,7 @@ func main() {
 			db.Set(string(body))
 
 			w.WriteHeader(http.StatusOK)
-			_, err = w.Write([]byte("Data saved successfully:\n " + string(body)))
-			if err != nil {
-				return
-			}
+			log.Println("Data saved successfully:\n " + string(body))
 		default:
 			_, err := fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
 			if err != nil {
@@ -100,4 +99,10 @@ func initHub(cfg *config.Config) (*eth.Hub, error) {
 	}
 
 	return hub, nil
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }

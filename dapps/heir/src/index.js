@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 
 import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
 import DeployInfo from '../../../deployInfo.json'
+import { splitSignature } from "ethers/lib/utils";
 
 const { abi: walletAbi } = WalletArtifact
 let walletAddress = DeployInfo.walletAddress
@@ -34,6 +35,7 @@ const walletBalanceDiv = document.getElementById('walletBalance')
 const sendButton = document.getElementById('sendButton')
 
 // Signed Type Data Section
+const fetchTypedData = document.getElementById('fetchTypedData')
 const processTypedData = document.getElementById('processTypedData')
 const signTypedDataResult = document.getElementById('signTypedDataResult')
 
@@ -122,13 +124,35 @@ const initialize = async () => {
      * Process Typed Data
      */
 
-    processTypedData.onclick = async () => {
-      const imWithSignature = JSON.parse(signTypedDataResult.value);
-      walletAddress = imWithSignature.message.domain.verifyingContract;
-      prompt("Wallet address", walletAddress);
-      // TODO init inheritance on the wallet
+    fetchTypedData.onclick = async () => {
+      const response = await fetch('http://localhost:8080')
+      const data = await response.json()
+      signTypedDataResult.value = JSON.stringify(data)
     }
 
+    processTypedData.onclick = async () => {
+      const imWithSignature = JSON.parse(signTypedDataResult.value);
+      walletAddress = imWithSignature.message.domain.verifyingContract
+      //todo check wallet address coincides with IM wallet address
+
+      const signature = imWithSignature.signature;
+      const splitedSignature = splitSignature(signature);
+
+      const _accounts = await ethereum.request({
+        method: 'eth_accounts',
+      })
+      const heirAddress = _accounts[0];
+      const signer = provider.getSigner(heirAddress)
+      //todo check heir address coincides with IM address
+
+      await wallet.connect(signer).initControllerChange(
+        heirAddress,
+        { heirAddress: heirAddress },
+        splitedSignature.r,
+        splitedSignature.s,
+        splitedSignature.v,
+      );
+    }
   }
 
   function handleNewAccounts (newAccounts) {

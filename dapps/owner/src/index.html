@@ -48,7 +48,9 @@
                     <p class="info-text alert alert-success">
                         <b>Wallet:</b><br/>
                         Address: <span id="walletAddress"></span><br/>
-                        Balance: <span id="walletBalance"></span>
+                        Balance: <span id="walletBalance"></span><br/>
+                        Wallet controller: <span id="walletController"></span><br/>
+                        Wallet pending controller: <span id="walletPendingController"></span>
                     </p>
                 </div>
 
@@ -88,6 +90,14 @@
                     <label for="signTypedDataResult" class="form-label">Inheritance Message with signature:</label>
                     <textarea class="form-control" id="signTypedDataResult" rows="30"></textarea>
                 </div>
+
+                <button
+                        class="btn btn-primary btn-lg btn-block mb-3"
+                        id="sendIMToOracle"
+                        disabled
+                >
+                    Send Inheritance Message to Oracle
+                </button>
             </div>
         </div>
     </main>

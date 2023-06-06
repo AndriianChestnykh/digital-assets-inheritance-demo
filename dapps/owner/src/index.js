@@ -29,6 +29,8 @@ const connectButton = document.getElementById('connectButton')
 // Wallet Section
 const walletAddressDiv = document.getElementById('walletAddress')
 const walletBalance = document.getElementById('walletBalance')
+const walletController = document.getElementById('walletController')
+const walletPendingController = document.getElementById('walletPendingController')
 
 // Send Eth Section
 const sendButton = document.getElementById('sendButton')
@@ -129,6 +131,7 @@ const initialize = async () => {
         method: 'eth_accounts',
       })
 
+      //todo - get heir address from heirAddress.value
       const signer = provider.getSigner(_accounts[0])
       const heirAddress = document.getElementById('heirAddress')
       const heir = provider.getSigner(heirAddress.value)
@@ -160,11 +163,30 @@ const initialize = async () => {
         }
 
         signTypedDataResult.innerHTML = JSON.stringify(imWithSignature, null, 2)
+        sendIMToOracle.disabled = false
       } catch (err) {
         console.error(err)
       }
     }
 
+    sendIMToOracle.onclick = async () => {
+      const url = "http://localhost:8080/"
+      const data = signTypedDataResult.innerHTML
+
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(JSON.parse(data)),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+
+      try {
+        const res = await fetch(url, options)
+      } catch (err) {
+        console.error(err)
+      }
+    }
   }
 
   function handleNewAccounts (newAccounts) {
@@ -174,10 +196,6 @@ const initialize = async () => {
       initializeAccountButtons()
     }
     updateButtons()
-  }
-
-  function getWalletAddress () {
-    walletAddressDiv.innerHTML = wallet.address
   }
 
   function handleNewNetwork (networkId) {
@@ -207,10 +225,14 @@ const initialize = async () => {
     }
   }
 
-  async function getWalletBalance () {
+  async function updateWalletInfo () {
+    walletAddressDiv.innerHTML = wallet.address
+
     try {
       const balance = await provider.getBalance(wallet.address)
       walletBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
+      walletController.innerHTML = await wallet.controller()
+      walletPendingController.innerHTML = await wallet.pendingController()
     } catch (err) {
       console.error(err)
     }
@@ -254,8 +276,8 @@ const initialize = async () => {
 
     getNetworkId()
     getBalance()
-    getWalletBalance()
-    getWalletAddress()
+    updateWalletInfo()
+    checkEvents()
 
     ethereum.on('networkChanged', handleNewNetwork)
     ethereum.on('accountsChanged', handleNewAccounts)
@@ -268,6 +290,37 @@ const initialize = async () => {
     } catch (err) {
       console.error('Error on init when getting accounts', err)
     }
+  }
+
+  let lastBlockNumber = 0;
+
+  async function checkEvents() {
+    const eventName = 'ControllerTransferInitiated';
+    const currentBlockNumber = await provider.getBlockNumber();
+
+    // Check if the current block number is greater than the last processed block number
+    if (currentBlockNumber > lastBlockNumber) {
+      const filter = wallet.filters.ControllerTransferInitiated(null);
+      const events = await wallet.queryFilter(filter);
+
+      if (events.length > 0) {
+        processCntrTransferInit(events);
+      }
+
+      // Update the last processed block number
+      lastBlockNumber = currentBlockNumber;
+    }
+
+    setTimeout(checkEvents, 5000);
+  }
+
+  function processCntrTransferInit(events) {
+    createPopup(`Controller transfer initiated to ${events[0].args.newController}`, 10000)
+    updateWalletInfo()
+  }
+
+  function createPopup(message, duration) {
+    alert(message);
   }
 }
 

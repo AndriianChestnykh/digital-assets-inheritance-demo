@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Transaction interceptor",
+  "version": "1.0",
+  "description": "Modifies transactions before they are sent to blockchain",
+
+  "icons": {
+    "16": "images/icon-16.png",
+    "32": "images/icon-32.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/content.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": ["scripts/foo.js"],
+    "matches": ["<all_urls>"]
+  }]
+
+}
