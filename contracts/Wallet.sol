@@ -98,22 +98,18 @@ contract Wallet {
         to.transfer(amount);
     }
 
-    function transferERC20(
-        address erc20contract,
-        address to,
-        uint256 amount
-    ) public {
-        require(msg.sender == controller, "Controller check failed");
-        IERC20(erc20contract).transfer(to, amount);
-    }
+    receive() external payable {}
 
-    function transferERC721(
-        address erc721contract,
-        address to,
-        uint256 tokenId
-    ) public {
+    fallback(bytes calldata input) external returns (bytes memory output) {
         require(msg.sender == controller, "Controller check failed");
-        IERC721(erc721contract).transferFrom(address(this), to, tokenId);
+
+        (address targetContract) = abi.decode(input[4:36], (address));
+        bytes memory _data = abi.encodePacked(msg.sig, input[36:]);
+
+        (bool success, bytes memory returnData) = targetContract.call(_data);
+
+        require(success, "Contract call failed");
+        return returnData;
     }
 
     function _hashInheritanceMessage(

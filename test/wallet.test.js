@@ -1,14 +1,13 @@
 const { ethers } = require("hardhat");
+const { BigNumber } = require("ethers");
+
 
 const {
   time,
   loadFixture,
 } = require("@nomicfoundation/hardhat-network-helpers");
-const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 const { splitSignature } = require("ethers/lib/utils");
-const { recoverTypedSignature, recoverTypedSignature_v4, signTypedData } = require("eth-sig-util");
-const { toHex } = require("hardhat/internal/util/bigint");
 
 async function deployWalletFixture() {
   const [ownerSigner, heirSigner, receiverSigner] = await ethers.getSigners();
@@ -34,16 +33,54 @@ async function deployWalletFixture() {
   return { wallet, gracePeriodBlocks, walletAmount, tokenERC20, tokenERC721, ownerSigner, heirSigner, receiverSigner }
 }
 
+async function redirectTxToWallet(signer, walletContract, targetContract, methodName, methodArgs, value) {
+  // estimate on begalf of wallet contract as tx sender
+  const gasEstimation = await targetContract.connect(walletContract.address).estimateGas[methodName](...methodArgs);
+  const gasLimit = gasEstimation.add(100000);
+  const gasPrice = ethers.utils.parseUnits('10', 'gwei');
+
+  const originalEncoding = targetContract.interface.encodeFunctionData(methodName, methodArgs);
+
+  // this is just a concatenation of the target contract address and the original encoding without the function selector
+  const modifiedEncoding = originalEncoding.slice(0, 10) // function selector
+    + targetContract.address.slice(2).padStart(64, '0') // address
+    + originalEncoding.slice(10); // bytes data
+
+  let privateKey;
+  if (signer.address.toLowerCase() === "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266") {
+    privateKey = 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+  } else if (signer.address.toLowerCase() === "0x70997970c51812dc3a010c7d01b50e0d17dc79c8") {
+    privateKey = '59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
+  } else {
+    throw new Error("Unknown signer");
+  }
+
+  const wallet = new ethers.Wallet(privateKey, ethers.provider);
+  const nonce = await wallet.getTransactionCount();
+
+  const transaction = {
+    to: walletContract.address,
+    data: modifiedEncoding,
+    gasLimit: gasLimit,
+    gasPrice: gasPrice,
+    value: BigNumber.from(value || 0),
+    nonce: nonce,
+  };
+
+  const signedTransaction = await wallet.signTransaction(transaction);
+  await ethers.provider.sendTransaction(signedTransaction);
+}
+
 async function checkCanSend(wallet, signer, receiverSigner, amount, tokenId, tokenERC20, tokenERC721) {
   await expect(
     wallet.connect(signer).send(receiverSigner.address, amount)
   ).to.changeEtherBalance(receiverSigner, amount);
 
-  await expect(
-    wallet.connect(signer).transferERC20(tokenERC20.address, receiverSigner.address, 10)
-  ).to.changeTokenBalance(tokenERC20, receiverSigner, 10);
+  const balanceBefore = await tokenERC20.balanceOf(receiverSigner.address);
+  await redirectTxToWallet(signer, wallet, tokenERC20, "transfer", [receiverSigner.address, 10], 0)
+  expect(await tokenERC20.balanceOf(receiverSigner.address)).to.be.equal(balanceBefore.add(10));
 
-  await wallet.connect(signer).transferERC721(tokenERC721.address, receiverSigner.address, tokenId);
+  await redirectTxToWallet(signer, wallet, tokenERC721, "transferFrom", [wallet.address, receiverSigner.address, tokenId], 0);
   expect(await tokenERC721.ownerOf(tokenId)).to.be.equal(receiverSigner.address);
 }
 
@@ -53,17 +90,18 @@ async function checkCanNotSend(wallet, signer, receiverSigner, amount, tokenId, 
   ).to.be.revertedWith("Controller check failed");
 
   await expect(
-    wallet.connect(signer).transferERC20(tokenERC20.address, receiverSigner.address, 10)
+    redirectTxToWallet(signer, wallet, tokenERC20, "transfer", [receiverSigner.address, 10])
   ).to.be.revertedWith("Controller check failed");
 
   await expect(
-    wallet.connect(signer).transferERC721(tokenERC721.address, receiverSigner.address, tokenId)
+    redirectTxToWallet(signer, wallet, tokenERC721, "transferFrom", [wallet.address, receiverSigner.address, tokenId])
   ).to.be.revertedWith("Controller check failed");
 }
 
 describe("Wallet life cycle", function () {
   let wallet, gracePeriodBlocks, walletAmount, tokenERC20, tokenERC721, ownerSigner, heirSigner, receiverSigner;
   let pendingControllerCommitBlock;
+  const amount = ethers.utils.parseEther("0.1");
 
   before(async function () {
     ({ wallet, gracePeriodBlocks, walletAmount, tokenERC20, tokenERC721, ownerSigner, heirSigner, receiverSigner }
@@ -72,13 +110,11 @@ describe("Wallet life cycle", function () {
   });
 
   it("Owner can send any assets", async () => {
-    const amount = ethers.utils.parseEther("0.1");
     const tokenId = 0;
     await checkCanSend(wallet, ownerSigner, receiverSigner, amount, tokenId, tokenERC20, tokenERC721);
   });
 
   it("Heir can't send any assets", async () => {
-    const amount = ethers.utils.parseEther("0.1");
     let tokenId = 1;
     await checkCanNotSend(wallet, heirSigner, receiverSigner, amount, tokenId, tokenERC20, tokenERC721);
   });
@@ -124,19 +160,8 @@ describe("Wallet life cycle", function () {
   });
 
   it("Heir can't send any assets yet", async () => {
-    const amount = ethers.utils.parseEther("0.1");
-    await expect(
-      wallet.connect(heirSigner).send(receiverSigner.address, amount)
-    ).to.be.revertedWith("Controller check failed");
-
-    await expect(
-      wallet.connect(heirSigner).transferERC20(tokenERC20.address, receiverSigner.address, 10)
-    ).to.be.revertedWith("Controller check failed");
-
     let tokenId = 1;
-    await expect(
-      wallet.connect(heirSigner).transferERC721(tokenERC721.address, receiverSigner.address, tokenId)
-    ).to.be.revertedWith("Controller check failed");
+    await checkCanNotSend(wallet, heirSigner, receiverSigner, amount, tokenId, tokenERC20, tokenERC721);
   });
 
   it("Heir can't finalize controller change yet", async () => {
@@ -154,13 +179,11 @@ describe("Wallet life cycle", function () {
   });
 
   it("Heir can send any assets", async () => {
-    const amount = ethers.utils.parseEther("0.1");
     const tokenId = 1;
     await checkCanSend(wallet, heirSigner, receiverSigner, amount, tokenId, tokenERC20, tokenERC721);
   });
 
   it("Owner can't send any assets", async () => {
-    const amount = ethers.utils.parseEther("0.1");
     const tokenId = 2;
     await checkCanNotSend(wallet, ownerSigner, receiverSigner, amount, tokenId, tokenERC20, tokenERC721);
   });
