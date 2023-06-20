@@ -6,11 +6,6 @@ import DeployInfo from '../../../deployInfo.json'
 
 const { abi: walletAbi } = WalletArtifact
 
-const currentUrl = new URL(window.location.href)
-const forwarderOrigin = currentUrl.hostname === 'localhost'
-  ? 'http://localhost:9010'
-  : undefined
-
 let wallet;
 let walletIntervalID;
 const updateWalletInterval = 5000;
@@ -48,13 +43,6 @@ const signTypedDataResult = document.getElementById('signTypedDataResult')
 
 const initialize = async () => {
 
-  let onboarding
-  try {
-    onboarding = new MetaMaskOnboarding({ forwarderOrigin })
-  } catch (error) {
-    console.error(error)
-  }
-
   const provider = new ethers.providers.Web3Provider(window.ethereum)
 
   let accounts
@@ -66,12 +54,6 @@ const initialize = async () => {
   ]
 
   const isMetaMaskConnected = () => accounts && accounts.length > 0
-
-  const onClickInstall = () => {
-    connectButton.innerText = 'Onboarding in progress'
-    connectButton.disabled = true
-    onboarding.startOnboarding()
-  }
 
   const onClickConnect = async () => {
     try {
@@ -90,16 +72,9 @@ const initialize = async () => {
       button.disabled = accountButtonsDisabled
     }
 
-    if (!isMetaMaskInstalled()) {
-      connectButton.innerText = 'Click here to install MetaMask!'
-      connectButton.onclick = onClickInstall
-      connectButton.disabled = false
-    } else if (isMetaMaskConnected()) {
+    if (isMetaMaskConnected()) {
       connectButton.innerText = 'Connected'
       connectButton.disabled = true
-      if (onboarding) {
-        onboarding.stopOnboarding()
-      }
     } else {
       connectButton.innerText = 'Connect'
       connectButton.onclick = onClickConnect
