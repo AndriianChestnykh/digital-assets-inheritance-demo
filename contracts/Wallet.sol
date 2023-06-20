@@ -30,7 +30,7 @@ contract Wallet {
         );
 
     address payable public controller;
-    uint256 private _gracePeriodBlocks;
+    uint256 public gracePeriodBlocks;
     address public pendingController;
     uint256 public pendingControllerCommitBlock;
 
@@ -42,9 +42,9 @@ contract Wallet {
 
     event ControllerTransferFinalized(address indexed newController);
 
-    constructor(address controler, uint256 gracePeriodBlocks) payable {
+    constructor(address controler, uint256 _gracePeriodBlocks) payable {
         controller = payable(controler);
-        _gracePeriodBlocks = gracePeriodBlocks;
+        gracePeriodBlocks = _gracePeriodBlocks;
     }
 
     function changeControllerInstantly(address newController) public {
@@ -80,7 +80,7 @@ contract Wallet {
             "No pending controller is waiting"
         );
         require(
-            block.number >= pendingControllerCommitBlock + _gracePeriodBlocks,
+            block.number >= pendingControllerCommitBlock + gracePeriodBlocks,
             "Grace period has not passed yet"
         );
         controller = payable(pendingController);

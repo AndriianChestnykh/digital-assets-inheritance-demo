@@ -49,9 +49,31 @@
                         <b>Wallet:</b><br/>
                         Address: <span id="walletAddress"></span><br/>
                         Balance: <span id="walletBalance"></span><br/>
-                        Wallet controller: <span id="walletController"></span><br/>
-                        Wallet pending controller: <span id="walletPendingController"></span>
+                        Controller: <span id="walletController"></span><br/>
+                        Pending controller: <span id="walletPendingController"></span><br/>
+                        Pending controller blocks (commit, current, grace period, countdown): <span id="walletPendingControllerBlocksLeft"></span>
                     </p>
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="initControllerTransferButton"
+                            disabled
+                    >
+                        Initiate Controller Transfer
+                    </button>
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="finalizeControllerTransferButton"
+                            disabled
+                    >
+                        Finalize Controller Transfer
+                    </button>
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="cancelControllerTransferButton"
+                            disabled
+                    >
+                        Cancel Controller Transfer
+                    </button>
                 </div>
 
                 <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">

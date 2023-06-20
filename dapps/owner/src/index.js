@@ -5,11 +5,17 @@ import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
 import DeployInfo from '../../../deployInfo.json'
 
 const { abi: walletAbi } = WalletArtifact
-let walletAddress = DeployInfo.walletAddress
+
 const currentUrl = new URL(window.location.href)
 const forwarderOrigin = currentUrl.hostname === 'localhost'
   ? 'http://localhost:9010'
   : undefined
+
+let wallet;
+let walletIntervalID;
+const updateWalletInterval = 5000;
+let controllerTransferInitLastBlock = 0;
+let controllerTransferFinalizedLastBlock = 0;
 
 const isMetaMaskInstalled = () => {
   const { ethereum } = window
@@ -31,6 +37,7 @@ const walletAddressDiv = document.getElementById('walletAddress')
 const walletBalance = document.getElementById('walletBalance')
 const walletController = document.getElementById('walletController')
 const walletPendingController = document.getElementById('walletPendingController')
+const pendingControllerBlocksLeft = document.getElementById('walletPendingControllerBlocksLeft')
 
 // Send Eth Section
 const sendButton = document.getElementById('sendButton')
@@ -49,7 +56,6 @@ const initialize = async () => {
   }
 
   const provider = new ethers.providers.Web3Provider(window.ethereum)
-  let wallet = new ethers.Contract(walletAddress, walletAbi, provider)
 
   let accounts
   let accountButtonsInitialized = false
@@ -147,7 +153,7 @@ const initialize = async () => {
           name: 'InheritanceMessage',
           version: '1',
           chainId,
-          verifyingContract: walletAddress,
+          verifyingContract: wallet.address,
         },
         message: {
           heirAddress: heir._address,
@@ -225,14 +231,50 @@ const initialize = async () => {
     }
   }
 
-  async function updateWalletInfo () {
-    walletAddressDiv.innerHTML = wallet.address
+  async function connectWalletUI (address) {
+    wallet = new ethers.Contract(address, walletAbi, provider)
+    await updateWalletInfo()
+    walletIntervalID = setInterval(updateWalletInfo, updateWalletInterval)
+  }
+
+  function disconnectWalletUI () {
+    wallet = null
+    clearInterval(walletIntervalID)
+  }
+
+  async function updateWalletInfo() {
+    if (!walletAddress) return
 
     try {
+      walletAddressDiv.innerHTML = wallet.address
       const balance = await provider.getBalance(wallet.address)
       walletBalance.innerHTML = `${ethers.utils.formatEther(balance.toString())} ETH`
       walletController.innerHTML = await wallet.controller()
       walletPendingController.innerHTML = await wallet.pendingController()
+      // ethers get current block number
+      const currentBlock = parseInt(await provider.getBlockNumber())
+      const commitBlock = parseInt(await wallet.pendingControllerCommitBlock())
+      const gracePeriod = parseInt(await wallet.gracePeriodBlocks())
+      const blocksLeft = commitBlock + gracePeriod - currentBlock;
+      pendingControllerBlocksLeft.innerHTML = `${commitBlock}, ${currentBlock}, ${gracePeriod}, <span style="color:red">${commitBlock > 0 ? blocksLeft : "-"}</span>`
+
+      let filter = wallet.filters.ControllerTransferInitiated()
+      let events = await wallet.queryFilter(filter, controllerTransferInitLastBlock, "latest")
+
+      if (events.length > 0) {
+        const event = events[events.length - 1];
+        controllerTransferInitLastBlock = event.blockNumber + 1
+        processControllerTransferInit(event)
+      }
+
+      filter = wallet.filters.ControllerTransferFinalized()
+      events = await wallet.queryFilter(filter, controllerTransferFinalizedLastBlock, "latest")
+
+      if (events.length > 0) {
+        const event = events[events.length - 1];
+        controllerTransferFinalizedLastBlock = event.blockNumber + 1
+        processControllerTransferFinalized(event)
+      }
     } catch (err) {
       console.error(err)
     }
@@ -276,8 +318,7 @@ const initialize = async () => {
 
     getNetworkId()
     getBalance()
-    updateWalletInfo()
-    checkEvents()
+    await connectWalletUI(DeployInfo.walletAddress)
 
     ethereum.on('networkChanged', handleNewNetwork)
     ethereum.on('accountsChanged', handleNewAccounts)
@@ -292,34 +333,16 @@ const initialize = async () => {
     }
   }
 
-  let lastBlockNumber = 0;
-
-  async function checkEvents() {
-    const eventName = 'ControllerTransferInitiated';
-    const currentBlockNumber = await provider.getBlockNumber();
-
-    // Check if the current block number is greater than the last processed block number
-    if (currentBlockNumber > lastBlockNumber) {
-      const filter = wallet.filters.ControllerTransferInitiated(null);
-      const events = await wallet.queryFilter(filter);
-
-      if (events.length > 0) {
-        processCntrTransferInit(events);
-      }
-
-      // Update the last processed block number
-      lastBlockNumber = currentBlockNumber;
-    }
-
-    setTimeout(checkEvents, 5000);
+  function processControllerTransferInit(event) {
+    createPopup(`Controller transfer initiated to ${event.args.newController}`)
   }
 
-  function processCntrTransferInit(events) {
-    createPopup(`Controller transfer initiated to ${events[0].args.newController}`, 10000)
-    updateWalletInfo()
+  function processControllerTransferFinalized(event) {
+    createPopup(`Controller transfer finalized to ${event.args.newController}`)
   }
 
-  function createPopup(message, duration) {
+  // TODO make this a good UI
+  function createPopup(message) {
     alert(message);
   }
 }
