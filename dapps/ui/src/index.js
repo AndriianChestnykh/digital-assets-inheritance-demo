@@ -40,7 +40,7 @@ const walletPendingController = document.getElementById('walletPendingController
 const pendingControllerBlocksLeft = document.getElementById('walletPendingControllerBlocksLeft')
 const initControllerTransferButton = document.getElementById('initControllerTransferButton')
 const finalizeControllerTransferButton = document.getElementById('finalizeControllerTransferButton')
-const cancelControllerTransferButton = document.getElementById('cancelControllerTransferButton')
+const cancelControllerChangeButton = document.getElementById('cancelControllerChangeButton')
 
 // Send Eth Section
 const sendButton = document.getElementById('sendButton')
@@ -258,6 +258,8 @@ async function updateWalletDiv() {
       finalizeControllerTransferButton.disabled = false
     }
 
+    cancelControllerChangeButton.disabled = wi.pendingController === "0x".padEnd(42, "0")
+
     let filter = wallet.filters.ControllerTransferInitiated()
     let events = await wallet.queryFilter(filter, controllerTransferInitLastBlock, "latest")
 
@@ -360,6 +362,19 @@ async function finalizeControllerTransfer() {
   await wallet.connect(signer).finalizeControllerChange();
 }
 
+async function onClickcancelControllerChange() {
+  await cancelControllerChange()
+}
+
+async function cancelControllerChange() {
+  const _accounts = await ethereum.request({
+    method: 'eth_accounts',
+  })
+  const heirAddress = _accounts[0];
+  const signer = provider.getSigner(heirAddress)
+  await wallet.connect(signer).cancelControllerChange();
+}
+
 // TODO implement good UI for the popup
 function createPopup(message) {
   alert(message);
@@ -419,7 +434,7 @@ const initialize = async () => {
   disconnectWalletButton.onclick = onClickDisconnectWallet
   initControllerTransferButton.onclick = onClickInitControllerTransfer
   finalizeControllerTransferButton.onclick = onClickFinalizeControllerTransfer
-  // cancelControllerTransferButton.onclick = onClickCancelControllerTransfer
+  cancelControllerChangeButton.onclick = onClickcancelControllerChange
 
   signedTypedDataFromOwnerDiv.onchange = onChangeSignedTypedDataFromOwner
   sendIMToOracleButton.onclick = sendIMToOracle
