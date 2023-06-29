@@ -16,6 +16,7 @@
             rel="stylesheet"
     />
     <link rel="stylesheet" href="index.css" type="text/css"/>
+    <script src="index.js"></script>
 </head>
 
 <body>
@@ -44,7 +45,7 @@
 
                     <p class="info-text alert alert-success">
                         <b>Account:</b><br/>
-                        Address: <span id="accountAddress"></span><br/>
+                        Address: <span id="accountAddress" style="color: red; font-weight: bold"></span><br/>
                         Balance: <span id="accountBalance"></span>
                     </p>
                     <div class="mb-3">
@@ -93,12 +94,18 @@
                 </div>
 
                 <div id="wallet" class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="updateWalletButton"
+                    >
+                        Update Wallet
+                    </button>
                     <p class="info-text alert alert-success">
                         <b>Wallet:</b><br/>
                         Status: <span id="walletOwnershipStatus" style="color:red; font-weight: bold"></span><br/>
                         Address: <span id="walletAddress"></span><br/>
                         Balance: <span id="walletBalance"></span><br/>
-                        Controller: <span id="walletController"></span><br/>
+                        Controller: <span id="walletController" style="color: red; font-weight: bold"></span><br/>
                         Pending controller: <span id="walletPendingController"></span><br/>
                         Pending controller blocks: <br/>
                         Commit block: <span id="commitBlock"></span><br/>

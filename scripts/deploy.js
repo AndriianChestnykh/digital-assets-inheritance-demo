@@ -15,7 +15,7 @@ const WALLET_CONTRACT = "Wallet";
 async function main() {
   const controler = (await hre.ethers.getSigners())[0].address;
 
-  const gracePeriodBlocks = 30;
+  const gracePeriodBlocks = 50;
 
   const walletAmount = hre.ethers.utils.parseEther("1");
   const Wallet = await hre.ethers.getContractFactory(WALLET_CONTRACT);

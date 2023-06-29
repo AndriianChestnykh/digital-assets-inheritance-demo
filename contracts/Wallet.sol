@@ -39,8 +39,8 @@ contract Wallet {
     }
 
     event ControllerTransferInitiated(address indexed newController);
-
     event ControllerTransferFinalized(address indexed newController);
+    event ControllerTransferCancelled(address indexed newController);
 
     constructor(address controler, uint256 _gracePeriodBlocks) payable {
         controller = payable(controler);
@@ -91,6 +91,7 @@ contract Wallet {
     }
 
     function cancelControllerChange() public {
+        emit ControllerTransferCancelled(pendingController);
         pendingController = address(0);
         pendingControllerCommitBlock = 0;
     }
