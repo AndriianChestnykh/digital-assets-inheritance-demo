@@ -39,7 +39,9 @@ const walletAddressDiv = document.getElementById('walletAddress')
 const walletBalance = document.getElementById('walletBalance')
 const walletController = document.getElementById('walletController')
 const walletPendingController = document.getElementById('walletPendingController')
-const pendingControllerBlocksLeft = document.getElementById('walletPendingControllerBlocksLeft')
+const commitBlockDiv = document.getElementById('commitBlock')
+const currentBlockDiv = document.getElementById('currentBlock')
+const countdownDiv = document.getElementById('countdown')
 const initControllerTransferButton = document.getElementById('initControllerTransferButton')
 const finalizeControllerTransferButton = document.getElementById('finalizeControllerTransferButton')
 const cancelControllerChangeButton = document.getElementById('cancelControllerChangeButton')
@@ -250,8 +252,11 @@ async function updateWalletDiv() {
     const deadline = commitBlock + wi.gracePeriodBlocks
     const currentBlock = wi.currentBlock;
     const blocksLeft = deadline - currentBlock;
-    pendingControllerBlocksLeft.innerHTML =
-      `${commitBlock}, ${deadline}, ${currentBlock}, <span style="color:red">${commitBlock > 0 ? blocksLeft : "-"}</span>`
+    commitBlockDiv.innerHTML = commitBlock;
+    currentBlockDiv.innerHTML = currentBlock;
+    countdownDiv.innerHTML = commitBlock !== 0
+      ? blocksLeft > 0 ? `${blocksLeft} blocks left` : "Deadline passed"
+      : ""
 
     if (currentBlock > deadline) {
       finalizeControllerTransferButton.disabled = false

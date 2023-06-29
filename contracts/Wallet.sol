@@ -87,6 +87,7 @@ contract Wallet {
 
         emit ControllerTransferFinalized(pendingController);
         pendingController = address(0);
+        pendingControllerCommitBlock = 0;
     }
 
     function cancelControllerChange() public {
