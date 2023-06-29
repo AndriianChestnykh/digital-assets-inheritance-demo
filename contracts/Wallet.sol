@@ -86,6 +86,7 @@ contract Wallet {
         controller = payable(pendingController);
 
         emit ControllerTransferFinalized(pendingController);
+        pendingController = address(0);
     }
 
     function cancelControllerChange() public {

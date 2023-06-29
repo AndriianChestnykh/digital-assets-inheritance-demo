@@ -32,7 +32,9 @@ const disconnectWalletButton = document.getElementById('disconnectWalletButton')
 
 // Wallet Section
 const walletAddressToConnect = document.getElementById('walletAddressToConnect')
+
 const walletDiv = document.getElementById('wallet')
+const walletOwnershipStatusDiv = document.getElementById('walletOwnershipStatus')
 const walletAddressDiv = document.getElementById('walletAddress')
 const walletBalance = document.getElementById('walletBalance')
 const walletController = document.getElementById('walletController')
@@ -49,19 +51,19 @@ const sendButton = document.getElementById('sendButton')
 const signTypedData = document.getElementById('signTypedData')
 const signTypedDataResult = document.getElementById('signTypedDataResult')
 const signedTypedDataFromOwnerDiv = document.getElementById('signedTypedDataFromOwner')
-
 const sendIMToOracleButton = document.getElementById('sendIMToOracleButton')
 const getIMFromOracleButton = document.getElementById('getIMFromOracleButton')
-
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
 let accountButtonsInitialized = false
 
-const buttons = [
-  sendButton,
-  signTypedData,
-]
+const OwnershipStatus = Object.freeze({
+  IsOwner: "Your are the owner",
+  IsNotOwner: "You are not the owner",
+  OwnershipToYou: "Ownership is being transferred to you",
+  OwnershipFromYou: "Ownership is being transferred from you"
+})
 
 const isMetaMaskConnected = () => accounts && accounts.length > 0
 
@@ -85,17 +87,13 @@ const onClickDisconnectWallet = async () => {
 }
 
 const updateButtons = () => {
-  const accountButtonsDisabled = !isMetaMaskInstalled() || !isMetaMaskConnected()
-  for (const button of buttons) {
-    button.disabled = accountButtonsDisabled
-  }
-
   if (isMetaMaskConnected()) {
     connectButton.innerText = 'Connected'
     connectButton.disabled = true
     connectWalletButton.disabled = false
     disconnectWalletButton.disabled = true
-    getIMFromOracleButton.disabled = false
+    sendButton.disabled = false
+    signTypedData.disabled = false
   } else {
     connectButton.innerText = 'Connect'
     connectButton.onclick = onClickConnect
@@ -160,7 +158,7 @@ const initializeAccountButtons = () => {
   }
 }
 
-async function sendIMToOracle () {
+async function sendIMToOracle() {
   const url = "http://localhost:8080/"
   const data = signTypedDataResult.innerHTML
 
@@ -179,27 +177,27 @@ async function sendIMToOracle () {
   }
 }
 
-async function getIMFromOracle () {
+async function getIMFromOracle() {
   const response = await fetch('http://localhost:8080')
   const data = await response.json()
   signedTypedDataFromOwnerDiv.value = JSON.stringify(data)
   onChangeSignedTypedDataFromOwner()
 }
 
-function handleNewAccounts (newAccounts) {
+function handleNewAccounts(newAccounts) {
   accounts = newAccounts
-  accountsAddressDiv.innerHTML = accounts
+  accountsAddressDiv.innerHTML = accounts[0]
   if (isMetaMaskConnected()) {
     initializeAccountButtons()
   }
   updateButtons()
 }
 
-function handleNewNetwork (networkId) {
+function handleNewNetwork(networkId) {
   networkDiv.innerHTML = networkId
 }
 
-async function getNetworkId () {
+async function getNetworkId() {
   try {
     const networkId = await ethereum.request({
       method: 'net_version',
@@ -210,7 +208,7 @@ async function getNetworkId () {
   }
 }
 
-async function getBalance () {
+async function getBalance() {
   try {
     const accounts = await ethereum.request({
       method: 'eth_accounts',
@@ -222,7 +220,7 @@ async function getBalance () {
   }
 }
 
-async function connectWalletUI (address) {
+async function connectWalletUI(address) {
   wallet = new ethers.Contract(address, walletAbi, provider)
   await updateWalletDiv()
   walletIntervalID = setInterval(updateWalletDiv, updateWalletInterval)
@@ -230,7 +228,7 @@ async function connectWalletUI (address) {
   disconnectWalletButton.disabled = false
 }
 
-function disconnectWalletUI () {
+function disconnectWalletUI() {
   wallet = null
   clearInterval(walletIntervalID)
   walletDiv.style.visibility = "hidden"
@@ -243,7 +241,8 @@ async function updateWalletDiv() {
   try {
     const wi = await getWalletInfo(wallet)
 
-    walletAddressDiv.innerHTML =  wi.address
+    walletOwnershipStatusDiv.innerHTML = wi.ownershipStatus
+    walletAddressDiv.innerHTML = wi.address
     walletBalance.innerHTML = `${ethers.utils.formatEther(wi.balance.toString())} ETH`
     walletController.innerHTML = wi.controller
     walletPendingController.innerHTML = wi.pendingController
@@ -282,7 +281,7 @@ async function updateWalletDiv() {
   }
 }
 
-async function sendEther () {
+async function sendEther() {
   try {
     const accounts = await ethereum.request({
       method: 'eth_accounts',
@@ -381,7 +380,8 @@ function createPopup(message) {
 }
 
 async function getWalletInfo(wallet) {
-  return {
+  const walletInfo = {
+    ownershipStatus: undefined,
     address: wallet.address,
     balance: await provider.getBalance(wallet.address),
     controller: await wallet.controller(),
@@ -390,6 +390,22 @@ async function getWalletInfo(wallet) {
     pendingControllerCommitBlock: parseInt(await wallet.pendingControllerCommitBlock()),
     gracePeriodBlocks: parseInt(await wallet.gracePeriodBlocks()),
   }
+
+  if (accounts[0].toLowerCase() === walletInfo.controller.toLowerCase()) {
+    if (walletInfo.pendingController !== ethers.constants.AddressZero) {
+      walletInfo.ownershipStatus = OwnershipStatus.OwnershipFromYou
+    } else {
+      walletInfo.ownershipStatus = OwnershipStatus.IsOwner
+    }
+    return walletInfo
+  }
+
+  if (accounts[0].toLowerCase() === walletInfo.pendingController.toLowerCase()) {
+    walletInfo.ownershipStatus = OwnershipStatus.OwnershipToYou
+  } else {
+    walletInfo.ownershipStatus = OwnershipStatus.IsNotOwner
+  }
+  return walletInfo
 }
 
 function onChangeSignedTypedDataFromOwner() {
@@ -430,18 +446,19 @@ const initialize = async () => {
 
   walletDiv.style.visibility = "hidden"
   walletAddressToConnect.value = DeployInfo.walletAddress
-  connectWalletButton.onclick = onClickConnectWallet
-  disconnectWalletButton.onclick = onClickDisconnectWallet
-  initControllerTransferButton.onclick = onClickInitControllerTransfer
-  finalizeControllerTransferButton.onclick = onClickFinalizeControllerTransfer
-  cancelControllerChangeButton.onclick = onClickcancelControllerChange
-
-  signedTypedDataFromOwnerDiv.onchange = onChangeSignedTypedDataFromOwner
-  sendIMToOracleButton.onclick = sendIMToOracle
-  getIMFromOracleButton.onclick = getIMFromOracle
 
   updateButtons()
 }
+
+// assign events
+connectWalletButton.onclick = onClickConnectWallet
+disconnectWalletButton.onclick = onClickDisconnectWallet
+initControllerTransferButton.onclick = onClickInitControllerTransfer
+finalizeControllerTransferButton.onclick = onClickFinalizeControllerTransfer
+cancelControllerChangeButton.onclick = onClickcancelControllerChange
+signedTypedDataFromOwnerDiv.onchange = onChangeSignedTypedDataFromOwner
+sendIMToOracleButton.onclick = sendIMToOracle
+getIMFromOracleButton.onclick = getIMFromOracle
 
 window.addEventListener('DOMContentLoaded', initialize)
 
