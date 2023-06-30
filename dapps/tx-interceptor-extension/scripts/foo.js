@@ -2,8 +2,12 @@ const requestOriginal = window.ethereum.request
 
 window.ethereum.request = function() {
   try {
+    const walletAddress = document.getElementById('walletAddress').innerHTML
+
     // if the request is send ether, we want to intercept it
-    if (arguments[0]?.method === 'eth_sendTransaction' && arguments[0]?.params?.[0]?.data === undefined) {
+    if (arguments[0]?.method === 'eth_sendTransaction'
+      && arguments[0]?.params?.[0]?.data === undefined
+      && walletAddress) {
       console.log('Original args', JSON.stringify(...arguments))
 
       const walletAddress = document.getElementById('walletAddress').innerHTML
