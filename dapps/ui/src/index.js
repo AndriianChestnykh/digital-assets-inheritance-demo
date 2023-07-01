@@ -12,7 +12,6 @@ const checkEventsInterval = 3000;
 let shouldCheckEvents = false;
 const updateBlocksInterval = 1000;
 let shouldUpdateWalletBlocks = false;
-let checkEventsBlock = 0
 
 const isMetaMaskInstalled = () => {
   const { ethereum } = window
@@ -220,27 +219,30 @@ async function getBalance() {
 
 async function connectWalletUI(address) {
   wallet = new ethers.Contract(address, walletAbi, provider)
-  await setEventsBlockToStartFrom()
-
   await updateWalletDiv()
+  await listenWalletEvents(await getWalletLastEventBlock())
   walletDiv.style.visibility = "visible"
   disconnectWalletButton.disabled = false
 }
 
-async function setEventsBlockToStartFrom() {
+async function getWalletLastEventBlock() {
   const filters = [
     wallet.filters.ControllerTransferInitiated(),
     wallet.filters.ControllerTransferFinalized(),
     wallet.filters.ControllerTransferCancelled(),
   ]
 
+  let lastEventBlock = 0;
+
   for (const filter of filters) {
     let events = await wallet.queryFilter(filter, 0, "latest")
     if (events.length > 0) {
       const event = events[events.length - 1];
-      checkEventsBlock = Math.max(event.blockNumber + 1, checkEventsBlock)
+      lastEventBlock = Math.max(event.blockNumber + 1, lastEventBlock)
     }
   }
+
+  return lastEventBlock
 }
 
 function disconnectWalletUI() {
@@ -253,7 +255,6 @@ function clearWalletData() {
   wallet = null
   walletInfo = {}
   shouldCheckEvents = false
-  checkEventsBlock = 0
 }
 
 async function startUpdatingWalletBlocks() {
@@ -316,13 +317,12 @@ async function updateWalletDiv() {
     walletPendingController.innerHTML = walletInfo.pendingController
 
     shouldCheckEvents = true
-    await startListeningWalletEvents()
   } catch (err) {
     console.error(err)
   }
 }
 
-async function startListeningWalletEvents() {
+async function listenWalletEvents(fromBlock = 0) {
   if (!shouldCheckEvents) return
 
   const filtersAndHandlers = [
@@ -331,10 +331,10 @@ async function startListeningWalletEvents() {
     { filter: wallet.filters.ControllerTransferCancelled(), handler: processControllerTransferCancelled },
   ]
 
+  let latestBlock = 0;
   try {
-    let latestBlock = 0;
     for (const fh of filtersAndHandlers) {
-      const events = await wallet.queryFilter(fh.filter, checkEventsBlock, "latest")
+      const events = await wallet.queryFilter(fh.filter, fromBlock, "latest")
       if (events.length > 0) {
         const event = events[events.length - 1];
         latestBlock = Math.max(event.blockNumber + 1, latestBlock)
@@ -342,12 +342,12 @@ async function startListeningWalletEvents() {
       }
     }
 
-    checkEventsBlock = latestBlock ? latestBlock : checkEventsBlock
+    latestBlock = Math.max(latestBlock, fromBlock)
   } catch (e) {
     console.error(e)
   }
 
-  setTimeout(startListeningWalletEvents, checkEventsInterval)
+  setTimeout(async () => { await listenWalletEvents(latestBlock) } , checkEventsInterval)
 }
 
 async function onClickSendEther() {
@@ -381,22 +381,22 @@ async function onClickSendEther() {
 }
 
 async function processControllerTransferInit(event) {
-  createPopup(`Controller transfer initiated to ${event.args.newController}`)
   await updateWalletDiv()
   shouldUpdateWalletBlocks = true
   await startUpdatingWalletBlocks()
+  createPopup(`Controller transfer initiated to ${event.args.newController}`)
 }
 
 async function processControllerTransferFinalized(event) {
-  createPopup(`Controller transfer finalized to ${event.args.newController}`)
   await updateWalletDiv()
   shouldUpdateWalletBlocks = false
+  createPopup(`Controller transfer finalized to ${event.args.newController}`)
 }
 
 async function processControllerTransferCancelled(event) {
-  createPopup(`Controller transfer canceled to ${event.args.newController}`)
   await updateWalletDiv()
   shouldUpdateWalletBlocks = false
+  createPopup(`Controller transfer canceled to ${event.args.newController}`)
 }
 
 async function onClickInitControllerTransfer() {
@@ -468,7 +468,6 @@ async function updateWalletInfo() {
   walletInfo.balance = await provider.getBalance(wallet.address)
   walletInfo.controller = await wallet.controller()
   walletInfo.pendingController = await wallet.pendingController()
-  walletInfo.currentBlock = parseInt(await provider.getBlockNumber())
   walletInfo.pendingControllerCommitBlock = parseInt(await wallet.pendingControllerCommitBlock())
   walletInfo.gracePeriodBlocks = parseInt(await wallet.gracePeriodBlocks())
 
