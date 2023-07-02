@@ -58,6 +58,7 @@ const signTypedData = document.getElementById('signTypedData')
 const signTypedDataResult = document.getElementById('signTypedDataResult')
 const signedTypedDataFromOwnerDiv = document.getElementById('signedTypedDataFromOwner')
 const sendIMToOracleButton = document.getElementById('sendIMToOracleButton')
+const sendIMToOracleLabel = document.getElementById('sendIMToOracleLabel')
 const getIMFromOracleButton = document.getElementById('getIMFromOracleButton')
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -175,7 +176,11 @@ async function sendIMToOracle() {
 
   try {
     await fetch(url, options)
+    sendIMToOracleLabel.style.color = 'green'
+    sendIMToOracleLabel.innerText = 'IM sent to Oracle'
   } catch (err) {
+    sendIMToOracleLabel.style.color = 'red'
+    sendIMToOracleLabel.innerText = 'Error sending IM to Oracle'
     console.error(err)
   }
 }
