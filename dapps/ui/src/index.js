@@ -24,6 +24,7 @@ const networkDiv = document.getElementById('network')
 // Account Section
 const accountsAddressDiv = document.getElementById('accountAddress')
 const accountBalance = document.getElementById('accountBalance')
+const updateAccountButton = document.getElementById('updateAccountButton')
 
 // Basic Actions Section
 const connectButton = document.getElementById('connectButton')
@@ -49,6 +50,7 @@ const cancelControllerChangeButton = document.getElementById('cancelControllerCh
 
 // Send Eth Section
 const etherAmountToSend = document.getElementById('etherAmountToSend')
+const destinationAddress = document.getElementById('destinationAddress')
 const sendEtherButton = document.getElementById('sendButton')
 
 // Signed Type Data Section
@@ -360,7 +362,7 @@ async function onClickSendEther() {
       // nonce: '0x00', // ignored by MetaMask
       // gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation.
       // gas: '0x27100', // customizable by user during MetaMask confirmation.
-      to: "0x2f318C334780961FB129D2a6c30D0763d9a5C970", // Required except during contract publications.
+      to: destinationAddress.value, // Required except during contract publications.
       from: accounts[0], // must match user's active address.
       value: ethers.utils.parseEther(etherAmountToSend.value).toHexString(), // Only required to send ether to the recipient from the initiating external account.
       // data:
@@ -463,6 +465,11 @@ async function onClickUpdateWallet() {
   await updateWalletDiv()
 }
 
+async function onClickUpdateAccount() {
+  await getBalance()
+  await updateAccounts()
+}
+
 async function updateWalletInfo() {
   walletInfo.address = wallet.address
   walletInfo.balance = await provider.getBalance(wallet.address)
@@ -502,6 +509,17 @@ function onChangeSignedTypedDataFromOwner() {
   connectWalletUI(addr)
 }
 
+async function updateAccounts() {
+  try {
+    const newAccounts = await ethereum.request({
+      method: 'eth_accounts',
+    })
+    handleNewAccounts(newAccounts)
+  } catch (err) {
+    console.error('Error on init when getting accounts', err)
+  }
+}
+
 const initialize = async () => {
   if (isMetaMaskInstalled()) {
 
@@ -512,15 +530,7 @@ const initialize = async () => {
 
     ethereum.on('networkChanged', handleNewNetwork)
     ethereum.on('accountsChanged', handleNewAccounts)
-
-    try {
-      const newAccounts = await ethereum.request({
-        method: 'eth_accounts',
-      })
-      handleNewAccounts(newAccounts)
-    } catch (err) {
-      console.error('Error on init when getting accounts', err)
-    }
+    await updateAccounts();
   }
 
   walletDiv.style.visibility = "hidden"
@@ -541,6 +551,7 @@ getIMFromOracleButton.onclick = getIMFromOracle
 sendEtherButton.onclick = onClickSendEther
 signTypedData.onclick = onClickSignTypedData
 updateWalletButton.onclick = onClickUpdateWallet
+updateAccountButton.onclick = onClickUpdateAccount
 
 window.addEventListener('DOMContentLoaded', initialize)
 

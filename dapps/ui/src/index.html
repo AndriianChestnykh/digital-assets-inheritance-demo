@@ -42,7 +42,12 @@
                     <p class="info-text alert alert-primary">
                         Network: <span id="network"></span>
                     </p>
-
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="updateAccountButton"
+                    >
+                        Update Account
+                    </button>
                     <p class="info-text alert alert-success">
                         <b>Account:</b><br/>
                         Address: <span id="accountAddress" style="color: red; font-weight: bold"></span><br/>
@@ -52,6 +57,12 @@
                         <p>
                             <label for="etherAmountToSend" class="form-label">Ether amount to send:</label>
                             <input type="text" class="form-control" id="etherAmountToSend" value="">
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <p>
+                            <label for="destinationAddress" class="form-label">Destination address:</label>
+                            <input type="text" class="form-control" id="destinationAddress" value="0x2f318C334780961FB129D2a6c30D0763d9a5C970">
                         </p>
                     </div>
                     <button
