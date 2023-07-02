@@ -30,14 +30,18 @@
         </header>
 
         <div class="container-fluid">
-            <button
-                    class="btn btn-primary btn-lg btn-block mb-3"
-                    id="connectButton"
-                    disabled>
-                Connect
-            </button>
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <button
+                            class="btn btn-primary btn-lg btn-block mb-3"
+                            id="connectButton"
+                            disabled>
+                        Connect
+                    </button>
+                </div>
+            </div>
 
-            <div class="row">
+            <div class="row justify-content-center">
                 <div id="account" class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
                     <p class="info-text alert alert-primary">
                         Network: <span id="network"></span>
@@ -168,7 +172,6 @@
                         >
                             Send Inheritance Message to Oracle
                         </button>
-                        <label id="sendIMToOracleLabel" for="sendIMToOracleButton" class="form-label"></label>
 
                         <div class="mb-3">
                             <label for="signTypedDataResult" class="form-label">Inheritance Message with signature:</label>
