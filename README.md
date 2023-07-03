@@ -16,4 +16,4 @@ npm run start:heir
 Build and run the Oracle in the ```dapps/oracle``` folder to simplify the Owner-Heir communication.
 Install the browser extension of transactions interseptor, which will forward some transactions to the Wallet smart contract
 
-[![Demo video]({https://drive.google.com/file/d/1UbeVLprScH9SnY10xPHHJVg67qfY48X7/view?usp=sharing})] ({https://youtu.be/8OJOFUVqDZs} "Demo video")
+[![Demo video]({./Screenshot.png})] ({https://youtu.be/8OJOFUVqDZs} "Demo video")
