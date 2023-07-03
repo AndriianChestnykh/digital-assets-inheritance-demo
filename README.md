@@ -6,9 +6,9 @@ It is for EVM-based blockchains. The point is that a user keeps Ethers and other
 
 When the inheritance time comes, the Heir will send the Inheritance Message the wallet smart contract from his EOA, which is one of the attributes of the message. The Wallet controll is transferred to the Heir then after some grace period.
 
-![pre-inheritance.png](pre-inheritance.png)
+<img src="pre-inheritance.png" width="50%" height="50%">
+<img src="inheritance.png" width="50%" height="50%">
 
-![inheritance.png](inheritance.png)
 
 ## To run the demo
 
