@@ -2,7 +2,13 @@
 
 The app represents a Proof-of-Concept of digital assets inheritance protocol. It allows a safe and secure inheritance between self-custody users without any intermediaries.
 
-It is based on the Ethereum blockchain and uses the Hardhat framework for development and testing. The app is a set of smart contracts, which are deployed on the local blockchain. The app is a Proof-of-Concept, so it is not intended to be used in production.  
+It is for EVM-based blockchains. The point is that a user keeps Ethers and other digital assets in the Wallet smart contract instead of EOA. Before the inheritance time a user (Owner) will sign and share a special EIP712 signed Typed Data (Inheritace Message) with her Heir.
+
+When the inheritance time comes, the Heir will send the Inheritance Message the wallet smart contract from his EOA, which is one of the attributes of the message. The Wallet controll is transferred to the Heir then after some grace period.
+
+![pre-inheritance.png](pre-inheritance.png)
+
+![inheritance.png](inheritance.png)
 
 ## To run the demo
 
