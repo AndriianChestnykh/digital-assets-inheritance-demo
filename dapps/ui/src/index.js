@@ -31,6 +31,11 @@ const connectButton = document.getElementById('connectButton')
 const connectWalletButton = document.getElementById('connectWalletButton')
 const disconnectWalletButton = document.getElementById('disconnectWalletButton')
 
+// code by Artem Hvozdov
+connectButton.onclick = function() {
+  alert("Hello! You pressed on button Connect!")
+}
+
 // Wallet Section
 const walletAddressToConnect = document.getElementById('walletAddressToConnect')
 
@@ -60,6 +65,7 @@ const signedTypedDataFromOwnerDiv = document.getElementById('signedTypedDataFrom
 const sendIMToOracleButton = document.getElementById('sendIMToOracleButton')
 const sendIMToOracleLabel = document.getElementById('sendIMToOracleLabel')
 const getIMFromOracleButton = document.getElementById('getIMFromOracleButton')
+const inheritanceMessageSendDiv = document.getElementById('inheritance-message-send-section')
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
@@ -228,7 +234,8 @@ async function connectWalletUI(address) {
   wallet = new ethers.Contract(address, walletAbi, provider)
   await updateWalletDiv()
   await listenWalletEvents(await getWalletLastEventBlock())
-  walletDiv.style.visibility = "visible"
+  walletDiv.style.display = "none"
+  inheritanceMessageSendDiv.style.display = "none"
   disconnectWalletButton.disabled = false
 }
 
@@ -254,7 +261,8 @@ async function getWalletLastEventBlock() {
 
 function disconnectWalletUI() {
   clearWalletData()
-  walletDiv.style.visibility = "hidden"
+  walletDiv.style.display = "none"
+  inheritanceMessageSendDiv.style.display = "none"
   disconnectWalletButton.disabled = true
 }
 
@@ -538,7 +546,8 @@ const initialize = async () => {
     await updateAccounts();
   }
 
-  walletDiv.style.visibility = "hidden"
+  walletDiv.style.display = "none"
+  inheritanceMessageSendDiv.style.display = "none"
   walletAddressToConnect.value = DeployInfo.walletAddress
 
   updateButtons()
