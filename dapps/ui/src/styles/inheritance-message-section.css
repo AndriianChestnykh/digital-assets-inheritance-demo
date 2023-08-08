@@ -1,0 +1,82 @@
+.inheritance-message-section {
+    display: flex;
+    width: 100%;
+    margin-top: 32px;
+}
+
+.inheritance-message-get-section {
+    width: 100%;
+    border-radius: 16px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 8px 16px 0px rgba(56, 64, 72, 0.08);
+}
+
+.message-form-label {
+    display: block;
+    background: var(--black, #384048);
+    padding: 24px 32px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    color: var(--white, #FFF);
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 90%;
+}
+
+.message-form-input {
+    display: block;
+    width: 95%;
+    height: 338px;
+    padding: 9px 2px 9px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--light-gray-2, #DBDDDE);
+    background: var(--white, #FFF);
+    color: var(--black, #384048);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 26px;
+    margin: 0 auto;
+    margin-top: 32px;
+    margin-bottom: 32px;
+}
+
+.inheritance-message-send-section {
+    width: 100%;
+    border-radius: 16px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 8px 16px 0px rgba(56, 64, 72, 0.08);
+    margin-left: 25px;
+}
+
+.inheritance-message-button {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-inheritance-message {
+    border: none;
+    border-radius: 8px;
+    background: var(--light-blue, #BDDDFA);
+    padding: 14px 30px;
+    color: var(--black, #384048);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 90%;
+    margin-bottom: 30px;
+    cursor: pointer;
+}
+
+.btn-inheritance-message:hover {
+    background: var(--blue);
+    color: var(--white);
+}
+
+.btn-inheritance-message:disabled {
+    background: var(--light-blue);
+    border: 1px solid var(--light-blue);
+    color: var(--light-gray);
+    cursor: auto;
+}

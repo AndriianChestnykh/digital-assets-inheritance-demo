@@ -1,0 +1,35 @@
+.contract-info-details {
+    padding: 40px 32px 8px 32px;
+    color: var(--gray, #8F959C);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 90%;
+}
+
+.contract-info-item {
+    margin-bottom: 32px;
+    display: flex;
+}
+
+.contract-info-item-text {
+    white-space: nowrap;
+}
+
+.contract-info-item-span {
+    position: relative;
+    padding-bottom: 2px;
+    width: 100%;
+    margin-left: 5px;
+}
+
+.contract-info-item-span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--black);
+}
