@@ -1,11 +1,11 @@
 .account-information-section {
+    width: 100%;
     margin-top: 60px;
     display: flex;
 }
 
 .network-account-section {
-    flex-grow: 1;
-    width: 540px;
+    width: 100%;
 }
 
 .network-section {
@@ -93,16 +93,16 @@
 #accountAddress {
     color: var(--red, #CD4444);
     font-feature-settings: 'clig' off, 'liga' off;
-    font-size: 18px;
+    font-size: 15px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 26px;
+    font-weight: 700;
+    line-height: 22px;
 }
 
 #accountBalance {
     color: var(--black, #384048);
     font-feature-settings: 'clig' off, 'liga' off;
-    font-size: 18px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 600;
     line-height: 26px;
@@ -115,7 +115,6 @@
 
 .account-span {
     position: relative;
-    padding-bottom: 2px;
     width: 100%;
     margin-left: 10px;
 }

@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const DIST = path.resolve(__dirname, 'dist')
 
@@ -31,6 +32,18 @@ module.exports = {
         }
       ]
     }),
-    new NodePolyfillPlugin()
-  ]
+    new NodePolyfillPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'index.css',
+    }),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+    ],
+  },
 };

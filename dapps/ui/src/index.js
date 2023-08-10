@@ -1,5 +1,7 @@
 import { ethers } from 'ethers'
 
+import './index.css';
+
 import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
 import DeployInfo from '../../../deployInfo.json'
 import { splitSignature } from "ethers/lib/utils";
@@ -31,11 +33,6 @@ const connectButton = document.getElementById('connectButton')
 const connectWalletButton = document.getElementById('connectWalletButton')
 const disconnectWalletButton = document.getElementById('disconnectWalletButton')
 
-// code by Artem Hvozdov
-connectButton.onclick = function() {
-  alert("Hello! You pressed on button Connect!")
-}
-
 // Wallet Section
 const walletAddressToConnect = document.getElementById('walletAddressToConnect')
 
@@ -66,6 +63,51 @@ const sendIMToOracleButton = document.getElementById('sendIMToOracleButton')
 const sendIMToOracleLabel = document.getElementById('sendIMToOracleLabel')
 const getIMFromOracleButton = document.getElementById('getIMFromOracleButton')
 const inheritanceMessageSendDiv = document.getElementById('inheritance-message-send-section')
+
+const elementsId = [
+  'network',
+  'accountAddress',
+  'accountBalance',
+  'updateAccountButton',
+  'connectButton',
+  'connectWalletButton',
+  'disconnectWalletButton',
+  'walletAddressToConnect',
+  'wallet',
+  'updateWalletButton',
+  'walletOwnershipStatus',
+  'walletAddress',
+  'walletBalance',
+  'walletController',
+  'walletPendingController',
+  'commitBlock',
+  'currentBlock',
+  'countdown',
+  'initControllerTransferButton',
+  'finalizeControllerTransferButton',
+  'cancelControllerChangeButton',
+  'etherAmountToSend',
+  'destinationAddress',
+  'sendButton',
+  'signTypedData',
+  'signTypedDataResult',
+  'signedTypedDataFromOwner',
+  'sendIMToOracleButton',
+  'sendIMToOracleLabel',
+  'getIMFromOracleButton',
+  'inheritance-message-send-section'
+]
+
+elementsId.forEach ( id => {
+  const element = document.getElementById(id);
+  if (element) {
+      console.log(`${id}: true`)
+  } else {
+      console.log(`${id}: false`)
+  }
+})
+
+console.log('Lentth elementsId:', elementsId.length)
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
@@ -234,8 +276,8 @@ async function connectWalletUI(address) {
   wallet = new ethers.Contract(address, walletAbi, provider)
   await updateWalletDiv()
   await listenWalletEvents(await getWalletLastEventBlock())
-  walletDiv.style.display = "none"
-  inheritanceMessageSendDiv.style.display = "none"
+  walletDiv.style.display = "block"
+  inheritanceMessageSendDiv.style.display = "block"
   disconnectWalletButton.disabled = false
 }
 

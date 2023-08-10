@@ -6,7 +6,7 @@
 @import './styles/contract-info-details.css';
 @import './styles/controller-transfer-section.css';
 @import './styles/inheritance-sign-section.css';
-@import './syles/inheritance-message-section';
+@import './styles/inheritance-message-section.css';
 
 :root {
     --bg-color: #E6EBEE;
@@ -36,10 +36,38 @@ body {
 }
 
 .wrapper {
-    width: 1440px;
+    max-width: 1340px;
     margin: 0 auto;
-    padding: 60px 165px;
+    padding: 60px 65px;
     box-sizing: border-box;
+}
+
+@media (max-width: 1129px) {
+    .contract-form-address-input {
+        display: block;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid var(--light-gray-2, #DBDDDE);
+        background: var(--white, #FFF);
+        width: 400px;
+        height: 44px;
+        padding: 2px 16px;
+        color: var(--black, #384048);
+        font-feature-settings: 'clig' off, 'liga' off;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 26px;
+    }
+    
+    .contract-connect-buttons {
+        margin-left: 25px;
+    }
+
+    .header-btn-connect {
+        font-size: 13px;
+        padding: 10px 40px;
+    }
 }
 
 @media (max-width: 1000px) {
@@ -598,9 +626,15 @@ body {
     }
 
     .controller-transfer-buttons {
-        margin: 15px 0px 0px 0px;
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 15px;
         display: flex;
         justify-content: space-between;
+    }
+
+    .controller-transfer-buttons button:first-child {
+        margin-left: 0;
     }
 
     /*inheritance-sign-section*/
