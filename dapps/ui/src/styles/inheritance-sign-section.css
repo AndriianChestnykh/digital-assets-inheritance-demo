@@ -2,10 +2,10 @@
     border-radius: 16px;
     background: var(--white, #FFF);
     box-shadow: 0px 8px 16px 0px rgba(56, 64, 72, 0.08);
-    margin-top: 32px;
-    padding: 32px 24px;
+    margin-top: 25px;
+    padding: 15px 24px;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
 }
 .inheritance-form-addres {
     width: 100%;
@@ -40,7 +40,7 @@
 
 .btn-inheritance-sign {
     width: 100%;
-    margin-left: 40px;
+    margin-top: 10px;
     border-radius: 8px;
     background: var(--blue, #1476CC);
     padding: 14px 24px;

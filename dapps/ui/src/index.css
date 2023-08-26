@@ -36,12 +36,24 @@ body {
 }
 
 .wrapper {
-    max-width: 1340px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 60px 65px;
+    padding: 20px 20px; /*default value: padding: 30px 65px;*/
     box-sizing: border-box;
+    background: gold;
 }
 
+.main {
+    display: flex;
+    gap: 30px;
+    border: 1px solid black
+}
+.wallet-interaction-section {
+    flex: 2;
+}
+.inheritance-message-section {
+    flex: 1;
+}
 @media (max-width: 1129px) {
     .contract-form-address-input {
         display: block;

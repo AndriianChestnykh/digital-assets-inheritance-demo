@@ -1,5 +1,5 @@
 .controller-transfer-section {
-    padding: 24px 32px;
+    padding: 15px 32px;
     display: flex;
     align-items: center;
     border-bottom-left-radius: 16px;
@@ -8,13 +8,16 @@
 }
 
 .controller-transfer-tittle {
+    width: 50%;
     color: var(--black, #384048);
-    font-size: 22px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 600;
     line-height: 90%;
 }
 
 .controller-transfer-buttons {
-    margin-left: 35px;
+    display: flex;
+    gap: 30px;
+    width: 100%;
 }

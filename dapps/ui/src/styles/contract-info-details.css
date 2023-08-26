@@ -1,14 +1,14 @@
 .contract-info-details {
-    padding: 40px 32px 8px 32px;
+    padding: 25px 32px 8px 32px;
     color: var(--gray, #8F959C);
-    font-size: 20px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 500;
     line-height: 90%;
 }
 
 .contract-info-item {
-    margin-bottom: 32px;
+    margin-bottom: 25px;
     display: flex;
 }
 

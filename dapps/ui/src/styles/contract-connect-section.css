@@ -1,8 +1,8 @@
 .contract-connect-section {
     display: flex;
     align-items: flex-end;
-    margin-top: 32px;
-    padding: 32px;
+    margin-top: 25px;
+    padding: 20px 32px;
     border-radius: 16px;
     background: var(--white, #FFF);
     box-shadow: 0px 8px 16px 0px rgba(56, 64, 72, 0.08);
@@ -28,7 +28,7 @@
     padding: 2px 16px;
     color: var(--black, #384048);
     font-feature-settings: 'clig' off, 'liga' off;
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 26px;
@@ -36,4 +36,7 @@
 
 .contract-connect-buttons {
     margin-left: 45px;
+    width: 100%;
+    display: flex;
+    gap: 30px;
 }
