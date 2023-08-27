@@ -40,13 +40,11 @@ body {
     margin: 0 auto;
     padding: 20px 20px; /*default value: padding: 30px 65px;*/
     box-sizing: border-box;
-    background: gold;
 }
 
 .main {
     display: flex;
     gap: 30px;
-    border: 1px solid black
 }
 .wallet-interaction-section {
     flex: 2;
@@ -54,6 +52,28 @@ body {
 .inheritance-message-section {
     flex: 1;
 }
+
+@media (max-width: 1440px) {
+    .wrapper {
+        padding: 20px 100px;
+    }
+    .main {
+        flex-direction: column;
+    }
+
+    .inheritance-message-section {
+        flex-direction: row;
+    }
+
+    .contract-info-details {
+        font-size: 16px;
+    }
+
+    .inheritance-message-section {
+        margin-top: -5px;
+    }
+}
+
 @media (max-width: 1129px) {
     .contract-form-address-input {
         display: block;
@@ -162,23 +182,32 @@ body {
         width: 100%;
     }
 
+    /* .transcation-form-details {
+        padding: 40px 32px 15px;
+    } */
+
     .transaction-section-tittle {
         font-size: 16px;
         padding: 20px 15px;
     }
 
-    .transcation-form-details input {
-        width: 100%;
-        height: 38px;
-    }
-
     .transcation-form-details label {
         font-size: 16px;
+
+    }
+
+    .form-addres {
+        margin-top: 30px;
     }
 
     .transcation-form-details input {
         width: 100%;
         height: 35px;
+        margin-top: 15px;
+    }
+
+    #sendButton {
+        margin-top: 20px;
     }
 
     /*contract-connect-section*/
@@ -217,6 +246,7 @@ body {
 
     .contract-info-details {
         padding: 20px 15px;
+        font-size: 14px;
     }
 
     .btn-update-contract {
@@ -430,8 +460,14 @@ body {
         margin-left: 5px;
     }
 
+    /*controller-transfer-section*/
+
     .controller-transfer-tittle {
-        font-size: 19px;
+        font-size: 14px;
+    }
+
+    .controller-transfer-buttons {
+        gap: 5px;
     }
 
     /*inheritance-sign-section*/
@@ -468,6 +504,22 @@ body {
 
     .inheritance-message-send-section {
         margin: 32px 0px 0px 0px;
+    }
+}
+
+@media (max-width: 675px) {
+    .controller-transfer-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controller-transfer-buttons {
+        margin-top: 15px;
+        gap: 5px;
+    }
+
+    #initControllerTransferButton {
+        margin-left: 0;
     }
 }
 

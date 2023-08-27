@@ -30,6 +30,7 @@
     display: block;
     width: 95%;
     /* height: 380px; */
+    height: 379px;
     padding: 9px 2px 9px 16px;
     border-radius: 8px;
     border: 1px solid var(--light-gray-2, #DBDDDE);
