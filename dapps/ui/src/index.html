@@ -15,7 +15,6 @@
             <span class="header-tittle">Digital Assets Inheritance Demo</span>
 
             <button class="header-btn-connect" id="connectButton">
-                <!-- <img src="./icons/connect-icon.svg" alt="connect"> -->
                 Connect
             </button>
         </header>
@@ -38,10 +37,10 @@
                             </div>
                             <div class="account-details">
                                 <div class="account-address">
-                                    Address: <br><span id="accountAddress" class="account-span">0x70997970C51812dc3A010C7d01b50e0d17dc79C8</span>
+                                    Address: <br><span id="accountAddress" class="account-span"></span>
                                 </div>
                                 <div class="account-balance">
-                                    Balance: <br><span id="accountBalance" class="account-span">0x70997970C51812dc3A010C7d01b50e0d17dc79C8</span>
+                                    Balance: <br><span id="accountBalance" class="account-span"></span>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +89,6 @@
                     <div class="contract-info-header">
                         <div class="contract-header-tittle">Wallet</div>
                         <button class="btn-update-contract" id="updateWalletButton">
-                            <!-- <img src="./icons/update-icon.svg" class="update-wallet-icon" alt="update wallet"> -->
                             Update Wallet
                         </button>
                     </div>
@@ -177,7 +175,7 @@
                     </div>
                 </div>
                 <div class="inheritance-message-send-section" id="inheritance-message-send-section">
-                    <span id="sendIMToOracleLabel">Error</span>
+                    <span id="sendIMToOracleLabel"></span>
                     <label for="signTypedDataResult" class="message-form-label">Inheritance Message with
                         signature:</label>
                     <textarea class="message-form-input" id="signTypedDataResult" rows="28"></textarea>
@@ -189,7 +187,19 @@
                 </div>
             </div>
         </main>
+    </div>
 
+    <div class="popup" id="popup">
+        <div class="popup-body">
+            <div class="popup-content">
+                <div class="popup-content-tittle">
+                    <div src="#" id="btn-close-popup" class="btn-popup-close">x</div>
+                </div>
+                <div id="popup-text" class="popup-text">
+                    
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="bundle.js" defer></script>

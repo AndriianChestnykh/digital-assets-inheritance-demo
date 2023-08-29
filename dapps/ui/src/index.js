@@ -64,50 +64,10 @@ const sendIMToOracleLabel = document.getElementById('sendIMToOracleLabel')
 const getIMFromOracleButton = document.getElementById('getIMFromOracleButton')
 const inheritanceMessageSendDiv = document.getElementById('inheritance-message-send-section')
 
-const elementsId = [
-  'network',
-  'accountAddress',
-  'accountBalance',
-  'updateAccountButton',
-  'connectButton',
-  'connectWalletButton',
-  'disconnectWalletButton',
-  'walletAddressToConnect',
-  'wallet',
-  'updateWalletButton',
-  'walletOwnershipStatus',
-  'walletAddress',
-  'walletBalance',
-  'walletController',
-  'walletPendingController',
-  'commitBlock',
-  'currentBlock',
-  'countdown',
-  'initControllerTransferButton',
-  'finalizeControllerTransferButton',
-  'cancelControllerChangeButton',
-  'etherAmountToSend',
-  'destinationAddress',
-  'sendButton',
-  'signTypedData',
-  'signTypedDataResult',
-  'signedTypedDataFromOwner',
-  'sendIMToOracleButton',
-  'sendIMToOracleLabel',
-  'getIMFromOracleButton',
-  'inheritance-message-send-section'
-]
-
-elementsId.forEach ( id => {
-  const element = document.getElementById(id);
-  if (element) {
-      console.log(`${id}: true`)
-  } else {
-      console.log(`${id}: false`)
-  }
-})
-
-console.log('Lentth elementsId:', elementsId.length)
+// Popup Sec
+const popup = document.getElementById('popup')
+const btnClosedPopup = document.getElementById('btn-close-popup')
+const popupText = document.getElementById('popup-text')
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
@@ -513,7 +473,12 @@ async function cancelControllerChange() {
 
 // TODO implement good UI for the popup
 function createPopup(message) {
-  alert(message);
+  popup.classList.add('active');
+  popupText.innerHTML = message;
+  btnClosedPopup.addEventListener('click', () => {
+    popup.classList.remove('active')
+  })
+  // alert(message);
 }
 
 async function onClickUpdateWallet() {
