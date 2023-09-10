@@ -1,192 +1,209 @@
 <html xmlns="http://www.w3.org/1999/html">
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <title>Digital Assets Inheritance Demo</title>
-    <link rel="icon" type="image/svg" href="metamask-fox.svg"/>
-    <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-    />
-    <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
-    <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.14.1/css/mdb.min.css"
-            rel="stylesheet"
-    />
-    <link rel="stylesheet" href="index.css" type="text/css"/>
+    <link rel="icon" type="image/svg" href="metamask-fox.svg" />
+    <link rel="stylesheet" href="index.css" type="text/css" />
     <script src="index.js"></script>
 </head>
 
 <body>
-    <main class="container-fluid">
+    <div class="wrapper">
         <header>
-            <div id="logo-container">
-                <h1 id="logo-text" class="text-center">
-                    Digital Assets Inheritance Demo
-                </h1>
-            </div>
+            <span class="header-tittle">Digital Assets Inheritance Demo</span>
+
+            <button class="header-btn-connect" id="connectButton">
+                Connect
+            </button>
         </header>
 
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-8">
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="connectButton"
-                            disabled>
-                        Connect
+        <main class="main">
+            <div class="wallet-interaction-section">
+                <div id="account" class="account-information-section">
+                    <div class="network-account-section">
+                        <div class="network-section">
+                            <div class="network-details">
+                                Network: <span id="network"></span>
+                            </div>
+                            <button id="updateAccountButton" class="btn-update-send-connect-disconnect">
+                                Update Account
+                            </button>
+                        </div>
+                        <div class="account-info">
+                            <div class="account-info-tittle">
+                                Account
+                            </div>
+                            <div class="account-details">
+                                <div class="account-address">
+                                    Address: <br><span id="accountAddress" class="account-span"></span>
+                                </div>
+                                <div class="account-balance">
+                                    Balance: <br><span id="accountBalance" class="account-span"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+    
+                    <div class="transaction-section">
+                        <div class="transaction-section-tittle">
+                            Transfer
+                        </div>
+                        <div class="transcation-form-details">
+                            <div class="form-send">
+                                <label for="etherAmountToSend" class="form-label">Ether amount to send:</label>
+                                <input type="text" class="transaction-form-send-input" id="etherAmountToSend" value="">
+                            </div>
+                            <div class="form-addres">
+                                <label for="destinationAddress" class="form-label">Destination address:</label>
+                                <input type="text" class="transaction-form-addres-input" id="destinationAddress" value="">
+                            </div>
+                            <button id="sendButton" class="btn-update-send-connect-disconnect" disabled>
+                                Send Ether
+                            </button>
+                        </div>
+                    </div>
+                </div>
+    
+    
+                <div class="contract-connect-section">
+                    <div class="contract-form-address">
+                        <label for="walletAddressToConnect" class="contract-form-address-label">Wallet address to
+                            connect</label>
+                        <input type="text" class="contract-form-address-input" id="walletAddressToConnect" value="">
+                    </div>
+                    <div class="contract-connect-buttons">
+                        <button class="btn-update-send-connect-disconnect" id="connectWalletButton" disabled>
+                            Connect Wallet
+                        </button>
+                        <button class="btn-update-send-connect-disconnect" id="disconnectWalletButton" disabled>
+                            Disconnect Wallet
+                        </button>
+                    </div>
+                </div>
+    
+    
+                <div id="wallet" class="contract-information-section">
+                    <div class="contract-info-header">
+                        <div class="contract-header-tittle">Wallet</div>
+                        <button class="btn-update-contract" id="updateWalletButton">
+                            Update Wallet
+                        </button>
+                    </div>
+                    <div class="contract-info-details">
+                        <div class="contract-status contract-info-item">
+                            <div class="contract-info-item-text">Status:</div>
+                            <span id="walletOwnershipStatus" class="contract-info-item-span"
+                                style="color:red; font-weight: bold"></span>
+                        </div>
+                        <div class="contract-address contract-info-item">
+                            <div class="contract-info-item-text">Address:</div>
+                            <span id="walletAddress" class="contract-info-item-span"></span>
+                        </div>
+                        <div class="contract-balance contract-info-item">
+                            <div class="contract-info-item-text">Balance:</div>
+                            <span id="walletBalance" class="contract-info-item-span"></span>
+                        </div>
+                        <div class="contract-controller contract-info-item">
+                            <div class="contract-info-item-text">Controller:</div>
+                            <span id="walletController" class="contract-info-item-span"
+                                style="color: red; font-weight: bold"></span>
+                        </div>
+                        <div class="contract-pending-controller contract-info-item">
+                            <div class="contract-info-item-text">Pending controller:</div> <span
+                                id="walletPendingController" class="contract-info-item-span"></span>
+                        </div>
+                        <div class="contract-pending-controller-blocks contract-info-item">
+                            <div class="contract-info-item-text">Pending controller blocks:</div>
+                        </div>
+                        <div class="contract-commit-block contract-info-item">
+                            <div class="contract-info-item-text">Commit block:</div>
+                            <span id="commitBlock" class="contract-info-item-span"></span>
+                        </div>
+                        <div class="contract-current-block contract-info-item">
+                            <div class="contract-info-item-text">Current block:</div>
+                            <span id="currentBlock" class="contract-info-item-span"></span>
+                        </div>
+                        <div class="contract-countdown contract-info-item">
+                            <div class="contract-info-item-text">Countdown: </div>
+                            <span id="countdown" class="contract-info-item-span"
+                                style="color:red; font-weight: bold"></span>
+                        </div>
+                    </div>
+                    <div class="controller-transfer-section">
+                        <div class="controller-transfer-tittle">Controller Transfer:</div>
+                        <div class="controller-transfer-buttons">
+                            <button class="btn-update-send-connect-disconnect" id="initControllerTransferButton" disabled>
+                                Initiate
+                            </button>
+                            <button class="btn-update-send-connect-disconnect" id="finalizeControllerTransferButton"
+                                disabled>
+                                Finalize
+                            </button>
+                            <button class="btn-update-send-connect-disconnect" id="cancelControllerChangeButton" disabled>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="inheritance-message" class="inheritance-sign-section">
+                    <div class="inheritance-form-addres">
+                        <label for="heirAddress" class="inheritance-form-label">Heir address</label>
+                        <input type="text" class="inheritance-form-input" id="heirAddress"
+                            value="0x70997970C51812dc3A010C7d01b50e0d17dc79C8">
+                    </div>
+                    <button class="btn-inheritance-sign" id="signTypedData" disabled>
+                        Sign Inheritance Message for the heir address
                     </button>
                 </div>
             </div>
+            
 
-            <div class="row justify-content-center">
-                <div id="account" class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                    <p class="info-text alert alert-primary">
-                        Network: <span id="network"></span>
-                    </p>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="updateAccountButton"
-                    >
-                        Update Account
-                    </button>
-                    <p class="info-text alert alert-success">
-                        <b>Account:</b><br/>
-                        Address: <span id="accountAddress" style="color: red; font-weight: bold"></span><br/>
-                        Balance: <span id="accountBalance"></span>
-                    </p>
-                    <div class="mb-3">
-                        <p>
-                            <label for="etherAmountToSend" class="form-label">Ether amount to send:</label>
-                            <input type="text" class="form-control" id="etherAmountToSend" value="">
-                        </p>
-                    </div>
-                    <div class="mb-3">
-                        <p>
-                            <label for="destinationAddress" class="form-label">Destination address:</label>
-                            <input type="text" class="form-control" id="destinationAddress" value="">
-                        </p>
-                    </div>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="sendButton"
-                            disabled
-                    >
-                        Send Ether
-                    </button>
-                    <div class="mb-3">
-                        <p>
-                            <label for="walletAddressToConnect" class="form-label">Wallet address to connect</label>
-                            <input type="text" class="form-control" id="walletAddressToConnect" value="">
-                        </p>
-                    </div>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="connectWalletButton"
-                            disabled
-                    >
-                        Connect Wallet
-                    </button>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="disconnectWalletButton"
-                            disabled
-                    >
-                        Disconnect Wallet
-                    </button>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="getIMFromOracleButton"
-                    >
-                        Get Inheritance Message from Oracle
-                    </button>
-                    <div class="mb-3">
-                        <label for="signedTypedDataFromOwner" class="form-label">Inheritance Message from some Owner:</label>
-                        <textarea class="form-control" id="signedTypedDataFromOwner" rows="28"></textarea>
+            <div class="inheritance-message-section">
+                <div class="inheritance-message-get-section">
+                    <label for="signedTypedDataFromOwner" class="message-form-label">Inheritance Message from some
+                        Owner:</label>
+                    <textarea class="message-form-input" id="signedTypedDataFromOwner" rows="28" cols="30"></textarea>
+                    <div class="inheritance-message-button">
+                        <button class="btn-inheritance-message" id="getIMFromOracleButton">
+                            Get Inheritance Message from Oracle
+                        </button>
                     </div>
                 </div>
-
-                <div id="wallet" class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="updateWalletButton"
-                    >
-                        Update Wallet
-                    </button>
-                    <p class="info-text alert alert-success">
-                        <b>Wallet:</b><br/>
-                        Status: <span id="walletOwnershipStatus" style="color:red; font-weight: bold"></span><br/>
-                        Address: <span id="walletAddress"></span><br/>
-                        Balance: <span id="walletBalance"></span><br/>
-                        Controller: <span id="walletController" style="color: red; font-weight: bold"></span><br/>
-                        Pending controller: <span id="walletPendingController"></span><br/>
-                        Pending controller blocks: <br/>
-                        Commit block: <span id="commitBlock"></span><br/>
-                        Current block: <span id="currentBlock"></span><br/>
-                        Countdown: <span id="countdown" style="color:red; font-weight: bold"></span><br/>
-                    </p>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="initControllerTransferButton"
-                            disabled
-                    >
-                        Initiate Controller Transfer
-                    </button>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="finalizeControllerTransferButton"
-                            disabled
-                    >
-                        Finalize Controller Transfer
-                    </button>
-                    <button
-                            class="btn btn-primary btn-lg btn-block mb-3"
-                            id="cancelControllerChangeButton"
-                            disabled
-                    >
-                        Cancel Controller Transfer
-                    </button>
-
-                    <div id="inheritance-message">
-                        <div class="mb-3">
-                            <p>
-                                <label for="heirAddress" class="form-label">Heir address</label>
-                                <input type="text" class="form-control" id="heirAddress" value="0x70997970C51812dc3A010C7d01b50e0d17dc79C8">
-                            </p>
-                        </div>
-
-                        <button
-                                class="btn btn-primary btn-lg btn-block mb-3"
-                                id="signTypedData"
-                                disabled
-                        >
-                            Sign Inheritance Message for the heir address
-                        </button>
-
-                        <button
-                                class="btn btn-primary btn-lg btn-block mb-3"
-                                id="sendIMToOracleButton"
-                                disabled
-                        >
+                <div class="inheritance-message-send-section" id="inheritance-message-send-section">
+                    <span id="sendIMToOracleLabel"></span>
+                    <label for="signTypedDataResult" class="message-form-label">Inheritance Message with
+                        signature:</label>
+                    <textarea class="message-form-input" id="signTypedDataResult" rows="28"></textarea>
+                    <div class="inheritance-message-button">
+                        <button class="btn-inheritance-message" id="sendIMToOracleButton" disabled>
                             Send Inheritance Message to Oracle
                         </button>
-
-                        <div class="mb-3">
-                            <label for="signTypedDataResult" class="form-label">Inheritance Message with signature:</label>
-                            <textarea class="form-control" id="signTypedDataResult" rows="28"></textarea>
-                        </div>
-
                     </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-body">
+            <div class="popup-content">
+                <div class="popup-content-tittle">
+                    <div src="#" id="btn-close-popup" class="btn-popup-close">x</div>
+                </div>
+                <div id="popup-text" class="popup-text">
+                    
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-            crossorigin="anonymous"></script>
     <script src="bundle.js" defer></script>
+
 </body>
+
 </html>

@@ -1,0 +1,139 @@
+.account-information-section {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    gap: 30px;
+}
+
+.network-account-section {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.network-section {
+    display: flex;
+    padding: 25px 24px;
+    border-radius: 16px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 8px 16px 0px rgba(56, 64, 72, 0.08);
+}
+
+.network-section button {
+    margin-left: 30px;
+}
+
+.network-details {
+    padding: 1px 16px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--light-gray-2, #DBDDDE);
+    color: var(--dark-gray, #5D6670);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+.network-details span {
+    color: var(--black, #384048);
+    margin-left: 10px;
+}
+
+.btn-update-send-connect-disconnect {
+    padding: 14px 0px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--blue, #1476CC);
+    background: transparent;
+    color: var(--blue, #1476CC);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 90%;
+    cursor: pointer;
+}
+
+.btn-update-send-connect-disconnect:hover {
+    background: var(--blue, #1476CC);
+    color: var(--white, #FFF);
+}
+
+.account-info {
+    margin-top: 20px;
+    background: var(--white, #FFF);
+    border-radius: 16px;
+
+}
+
+.account-info-tittle {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background: var(--black, #384048);
+    padding: 15px 32px;
+    color: var(--white, #FFF);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 90%;
+}
+
+.account-details {
+    padding: 20px 32px;
+}
+
+.account-address,
+.account-balance {
+    color: var(--gray, #8F959C);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 90%;
+}
+
+#accountAddress {
+    color: var(--red, #CD4444);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+#accountBalance {
+    color: var(--black, #384048);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 26px;
+}
+
+.account-address,
+.account-balance {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-span {
+    position: relative;
+    width: 100%;
+}
+
+.account-span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--black);
+}
+
+.account-balance {
+    margin-top: 10px;
+}

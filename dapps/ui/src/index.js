@@ -1,5 +1,7 @@
 import { ethers } from 'ethers'
 
+import './index.css';
+
 import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
 import DeployInfo from '../../../deployInfo.json'
 import { splitSignature } from "ethers/lib/utils";
@@ -60,6 +62,12 @@ const signedTypedDataFromOwnerDiv = document.getElementById('signedTypedDataFrom
 const sendIMToOracleButton = document.getElementById('sendIMToOracleButton')
 const sendIMToOracleLabel = document.getElementById('sendIMToOracleLabel')
 const getIMFromOracleButton = document.getElementById('getIMFromOracleButton')
+const inheritanceMessageSendDiv = document.getElementById('inheritance-message-send-section')
+
+// Popup Sec
+const popup = document.getElementById('popup')
+const btnClosedPopup = document.getElementById('btn-close-popup')
+const popupText = document.getElementById('popup-text')
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
@@ -228,7 +236,8 @@ async function connectWalletUI(address) {
   wallet = new ethers.Contract(address, walletAbi, provider)
   await updateWalletDiv()
   await listenWalletEvents(await getWalletLastEventBlock())
-  walletDiv.style.visibility = "visible"
+  walletDiv.style.display = "block"
+  inheritanceMessageSendDiv.style.display = "block"
   disconnectWalletButton.disabled = false
 }
 
@@ -254,7 +263,8 @@ async function getWalletLastEventBlock() {
 
 function disconnectWalletUI() {
   clearWalletData()
-  walletDiv.style.visibility = "hidden"
+  walletDiv.style.display = "none"
+  inheritanceMessageSendDiv.style.display = "none"
   disconnectWalletButton.disabled = true
 }
 
@@ -463,7 +473,12 @@ async function cancelControllerChange() {
 
 // TODO implement good UI for the popup
 function createPopup(message) {
-  alert(message);
+  popup.classList.add('active');
+  popupText.innerHTML = message;
+  btnClosedPopup.addEventListener('click', () => {
+    popup.classList.remove('active')
+  })
+  // alert(message);
 }
 
 async function onClickUpdateWallet() {
@@ -538,7 +553,8 @@ const initialize = async () => {
     await updateAccounts();
   }
 
-  walletDiv.style.visibility = "hidden"
+  walletDiv.style.display = "none"
+  inheritanceMessageSendDiv.style.display = "none"
   walletAddressToConnect.value = DeployInfo.walletAddress
 
   updateButtons()

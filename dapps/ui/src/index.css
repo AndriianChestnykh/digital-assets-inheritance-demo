@@ -1,37 +1,742 @@
-section {
-    margin: 20px 0 20px 0;
+@import './styles/header.css';
+@import './styles/account-information-section.css';
+@import './styles/transaction-section.css';
+@import './styles/contract-connect-section.css';
+@import './styles/contract-information-section.css';
+@import './styles/contract-info-details.css';
+@import './styles/controller-transfer-section.css';
+@import './styles/inheritance-sign-section.css';
+@import './styles/inheritance-message-section.css';
+@import './styles/popup.css';
+
+:root {
+    --bg-color: #E6EBEE;
+
+    --dark-blue: #0F5BAA;
+    --blue: #1476CC;
+    --light-blue: #BDDDFA;
+
+    --white: #FFF;
+    --black: #384048;
+
+    --dark-gray: #5D6670;
+    --gray: #8F959C;
+    --light-gray: #F0F0F2;
+    --light-gray-2: #DBDDDE;
+
+    --blue-down: #9ac6f0;
 }
 
-.info-text {
-    font-size: 1.1em;
+body {
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    font-family: 'Fira Code', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.full-width {
-    width: 100%;
+.wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px 20px;
+    box-sizing: border-box;
 }
 
-.card {
-    margin-bottom: 20px;
-}
-
-/* Logo & Header */
-
-header {
+.main {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    gap: 30px;
+}
+.wallet-interaction-section {
+    flex: 2;
+}
+.inheritance-message-section {
+    flex: 1;
 }
 
-#logo-container {
-    display: inline-flex;
-    flex-direction: column;
+@media (max-width: 1440px) {
+    .wrapper {
+        padding: 20px 100px;
+    }
+    .main {
+        flex-direction: column;
+    }
+
+    .inheritance-message-section {
+        flex-direction: row;
+    }
+
+    .contract-info-details {
+        font-size: 16px;
+    }
+
+    .inheritance-message-section {
+        margin-top: -5px;
+    }
 }
 
-#logo-text {
-    padding-top: 15px;
-    padding-bottom: 5px;
+@media (max-width: 1129px) {
+    .contract-form-address-input {
+        display: block;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid var(--light-gray-2, #DBDDDE);
+        background: var(--white, #FFF);
+        width: 400px;
+        height: 44px;
+        padding: 2px 16px;
+        color: var(--black, #384048);
+        font-feature-settings: 'clig' off, 'liga' off;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 26px;
+    }
+    
+    .contract-connect-buttons {
+        margin-left: 25px;
+    }
+
+    .header-btn-connect {
+        font-size: 13px;
+        padding: 10px 40px;
+    }
 }
 
-#mm-logo {
-    width: 100%;
+@media (max-width: 1000px) {
+    .wrapper {
+        width: 100%;
+        max-width: 1000px;
+        padding: 40px 20px;
+    }
+
+    header {
+        display: block;
+    }
+
+    .header-tittle {
+        font-size: 32px;
+    }
+
+    .header-btn-connect {
+        margin-top: 30px;
+        font-size: 17px;
+    }
+
+    /*account-information-section*/
+
+    .account-information-section {
+        margin-top: 25px;
+        display: flex;
+        width: 100%;
+    }
+
+    .network-account-section {
+        width: 100%;
+    }
+
+    .network-section {
+        padding: 32px 14px;
+    }
+
+    .network-details {
+        font-size: 13px;
+        padding: 2px 10px;
+        font-weight: 200;
+        line-height: 13px;
+        width: 100%;
+        height: 35px;
+    }
+
+    .btn-update-send-connect-disconnect {
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+
+    .account-info-tittle {
+        font-size: 16px;
+    }
+
+    .account-info-tittle {
+        padding: 20px 15px;
+    }
+
+    .account-details {
+        padding: 40px 15px;
+    }
+
+    .account-address,
+    .account-balance {
+        font-size: 14px;
+    }
+
+    #accountAddress,
+    #accountBalance {
+        font-size: 12px;
+    }
+
+    /*transaction-section*/
+
+    .transaction-section {
+        margin: 0px 0px 0px 15px;
+        width: 100%;
+    }
+
+    /* .transcation-form-details {
+        padding: 40px 32px 15px;
+    } */
+
+    .transaction-section-tittle {
+        font-size: 16px;
+        padding: 20px 15px;
+    }
+
+    .transcation-form-details label {
+        font-size: 16px;
+
+    }
+
+    .form-addres {
+        margin-top: 30px;
+    }
+
+    .transcation-form-details input {
+        width: 100%;
+        height: 35px;
+        margin-top: 15px;
+    }
+
+    #sendButton {
+        margin-top: 20px;
+    }
+
+    /*contract-connect-section*/
+
+    .contract-connect-section {
+        padding: 20px 15px;
+    }
+
+    .contract-form-address-input {
+        height: 32px;
+    }
+
+    .contract-connect-buttons {
+        margin: 32px 0px 0px 30px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #connectWalletButton,
+    #disconnectWalletButton {
+        width: 100%;
+    }
+
+    #disconnectWalletButton {
+        margin-left: 10px;
+    }
+
+    .contract-info-header {
+        padding: 20px 15px;
+    }
+
+    .contract-header-tittle {
+        font-size: 16px;
+    }
+
+    .contract-info-details {
+        padding: 20px 15px;
+        font-size: 14px;
+    }
+
+    .btn-update-contract {
+        font-size: 12px;
+        padding: 10px 20px;
+    }
+
+    .btn-update-contract img {
+        width: 20px;
+    }
+
+    .contract-info-item {
+        font-size: 14px;
+    }
+
+    /*controller-transfer-section*/
+
+    .controller-transfer-section {
+        padding: 20px 15px;
+    }
+
+    .controller-transfer-tittle {
+        font-size: 19px;
+        white-space: nowrap;
+    }
+
+    .controller-transfer-buttons {
+        width: 100%;
+        display: flex;
+    }
+
+    .controller-transfer-buttons button {
+        width: 100%;
+        margin-left: 30px;
+    }
+
+    /*inheritance-sign-section*/
+
+    .inheritance-sign-section {
+        padding: 20px 15px;
+    }
+
+    .inheritance-form-addres {
+        width: 100%;
+    }
+
+    .inheritance-form-label {
+        font-size: 11px;
+    }
+
+    .inheritance-form-input {
+        height: 35px;
+        font-size: 13px;
+    }
+
+    .btn-inheritance-sign {
+        width: 100%;
+        font-size: 15px;
+        padding: 10.75px 24px;
+    }
+
+
+    .inheritance-message-section {
+        width: 100%;
+        display: flex;
+
+    }
+
+    .inheritance-message-get-section,
+    .inheritance-message-send-section {
+        width: 100%;
+
+    }
+
+    .inheritance-message-send-section {
+        margin-left: 20px;
+    }
+
+    .message-form-label {
+        font-size: 16px;
+        padding: 20px 15px;
+    }
+
+    .message-form-input {
+        width: 89%;
+        font-size: 12px;
+    }
+
+}
+
+/*tablet screen*/
+
+@media (max-width: 768px) {
+    .wrapper {
+        width: 100%;
+        max-width: 768px;
+        padding: 60px 40px;
+    }
+
+    header {
+        display: block;
+    }
+
+    .header-tittle {
+        font-size: 35px;
+    }
+
+    .header-btn-connect {
+        margin-top: 30px;
+        font-size: 20px;
+    }
+
+    /*account-information-section*/
+
+    .account-information-section {
+        margin-top: 50px;
+        display: block;
+        width: 100%;
+    }
+
+    .network-account-section {
+        width: 100%;
+    }
+
+    /*transaction-section*/
+
+    .transaction-section {
+        margin: 32px 0px 0px 0px;
+        width: 100%;
+    }
+
+    .account-info-tittle {
+        font-size: 19px;
+    }
+
+    .account-address,
+    .account-balance {
+        font-size: 17px;
+    }
+
+    #accountAddress,
+    #accountBalance {
+        font-size: 15px;
+    }
+
+    .account-span {
+        width: 100%;
+        margin-left: 5px;
+    }
+
+    .transaction-section-tittle {
+        font-size: 19px;
+    }
+
+    .transcation-form-details label {
+        font-size: 13px;
+    }
+
+    .transcation-form-details input {
+        width: 100%;
+        height: 38px;
+    }
+
+    .btn-update-send-connect-disconnect {
+        font-size: 15px;
+    }
+
+    /*contract-connect-section*/
+
+    .contract-connect-section {
+        display: block;
+    }
+
+    .contract-form-address-input {
+        width: 100%;
+    }
+
+    .contract-connect-buttons {
+        margin: 32px 0px 0px 0px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #connectWalletButton,
+    #disconnectWalletButton {
+        width: 100%;
+    }
+
+    #disconnectWalletButton {
+        margin-left: 32px;
+    }
+
+    .contract-header-tittle {
+        font-size: 19px;
+    }
+
+    .btn-update-contract {
+        font-size: 15px;
+    }
+
+    .contract-info-item {
+        font-size: 14px;
+    }
+
+    .contract-info-item-text {
+        white-space: nowrap;
+    }
+
+    .contract-info-item-span {
+        width: 100%;
+        margin-left: 5px;
+    }
+
+    /*controller-transfer-section*/
+
+    .controller-transfer-tittle {
+        font-size: 14px;
+    }
+
+    .controller-transfer-buttons {
+        gap: 5px;
+    }
+
+    /*inheritance-sign-section*/
+
+    .inheritance-sign-section {
+        display: block;
+    }
+
+    .inheritance-form-input {
+        width: 100%;
+        font-size: 13px;
+        height: 38px;
+    }
+
+    .btn-inheritance-sign {
+        margin: 32px 0px 0px 0px;
+        font-size: 15px;
+    }
+
+    /*inheritance-message-section*/
+
+    .inheritance-message-section {
+        display: block;
+    }
+
+
+    .message-form-label {
+        font-size: 19px;
+    }
+
+    .message-form-input {
+        width: 93%;
+    }
+
+    .inheritance-message-send-section {
+        margin: 32px 0px 0px 0px;
+    }
+}
+
+@media (max-width: 675px) {
+    .controller-transfer-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controller-transfer-buttons {
+        margin-top: 15px;
+        gap: 5px;
+    }
+
+    #initControllerTransferButton {
+        margin-left: 0;
+    }
+}
+
+/*mobile screen*/
+
+@media (max-width: 378px) {
+    .wrapper {
+        padding: 20px 10px;
+    }
+
+    .header-tittle {
+        font-size: 20px;
+    }
+
+    .header-btn-connect {
+        font-size: 15px;
+        padding: 10px 30px;
+    }
+
+    /*account-information-section*/
+
+    .account-information-section {
+        margin-top: 25px;
+    }
+
+    .network-section {
+        display: block;
+        padding: 20px 10px;
+    }
+
+    .network-details {
+        width: 96%;
+        padding: 5px 5px;
+        font-size: 13px;
+    }
+
+    .btn-update-send-connect-disconnect {
+        font-size: 12px;
+        padding: 12px 22px;
+    }
+
+    #updateAccountButton {
+        margin: 15px 10px 0px 0px;
+        width: 100%;
+    }
+
+    .account-info {
+        margin-top: 20px;
+    }
+
+    .account-info-tittle {
+        font-size: 16px;
+        padding: 14px 10px;
+    }
+
+    .account-details {
+        padding: 25px 10px;
+    }
+
+    .account-address,
+    .account-balance {
+        font-size: 14px;
+    }
+
+    .account-balance {
+        margin-top: 25px;
+    }
+
+    #account-address,
+    #account-balance {
+        font-size: 14px;
+    }
+
+    /*transaction-section*/
+
+    .transaction-section {
+        margin-top: 20px;
+    }
+
+    .transaction-section-tittle {
+        padding: 14px 10px;
+        font-size: 16px;
+    }
+
+    .transcation-form-details {
+        padding: 14px 10px;
+    }
+
+    .transcation-form-details label {
+        font-size: 11px;
+    }
+
+    .transcation-form-details input {
+        height: 32px;
+        font-size: 13px;
+    }
+
+    /*contract-connect-section*/
+
+    .contract-connect-section {
+        padding: 14px 10px;
+    }
+
+    .contract-form-address-label {
+        font-size: 11px;
+    }
+
+    .contract-form-address-input {
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .contract-connect-buttons {
+        margin-top: 20px;
+    }
+
+    /*contract-information-section*/
+
+    .contract-information-section {
+        margin-top: 20px;
+    }
+
+    .contract-info-header {
+        padding: 14px 10px;
+    }
+
+    .contract-header-tittle {
+        font-size: 16px;
+    }
+
+    .btn-update-contract {
+        font-size: 12px;
+        padding: 10px 14px;
+    }
+
+    .btn-update-contract img {
+        margin-right: 5px;
+        width: 20px;
+    }
+
+    .contract-info-details {
+        padding: 20px 10px 4px 10px;
+        color: var(--gray, #8F959C);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 90%;
+    }
+
+    .contract-info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contract-info-item-span {
+        margin: 12px 0px 0px 0px;
+    }
+
+    /*controller-transfer-section*/
+
+    .controller-transfer-section {
+        display: block;
+        padding: 14px 10px;
+    }
+
+    .controller-transfer-tittle {
+        font-size: 16px;
+    }
+
+    .controller-transfer-buttons {
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .controller-transfer-buttons button:first-child {
+        margin-left: 0;
+    }
+
+    /*inheritance-sign-section*/
+
+    .inheritance-sign-section {
+        padding: 14px 10px;
+    }
+
+    .inheritance-form-label {
+        font-size: 11px;
+    }
+
+    .inheritance-form-input {
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .btn-inheritance-sign {
+        font-size: 12px;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .message-form-label {
+        padding: 14px 10px;
+        font-size: 16px;
+    }
+
+    .message-form-input {
+        width: 95%;
+        margin: 0 auto;
+        margin-top: 14px;
+        margin-bottom: 14px;
+        font-size: 13px;
+    }
+
+    .btn-inheritance-message {
+        padding: 12px 15px;
+    }
 }
