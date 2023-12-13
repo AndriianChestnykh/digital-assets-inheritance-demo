@@ -17,7 +17,7 @@ describe("Hub Contract", function () {
   });
 
   it("should register public key for owner", async function () {
-    const publicKey = "0x0123456789ABCDEF"; // Пример данных публичного ключа
+    const publicKey = "0x0123456789ABCDEF"; // Exapmle data of public key by owner
 
     await hubContract.connect(owner).registerPubKeyOwner(publicKey);
     const registeredPublicKey = await hubContract.registeredKeys(owner.address);
@@ -26,7 +26,7 @@ describe("Hub Contract", function () {
   });
 
   it("should register public key for heir", async function () {
-    const publicKey = "0xABCDEF0123456789"; // Пример данных публичного ключа
+    const publicKey = "0xABCDEF0123456789"; // Exapmle data of public key by heir
 
     await hubContract.connect(owner).registerPubKeyHeir(heir.address, publicKey);
     const registeredPublicKey = await hubContract.registeredKeys(heir.address);
@@ -35,7 +35,7 @@ describe("Hub Contract", function () {
   });
 
   it("should register public key for oracle", async function () {
-    const publicKey = "0x9876543210FEDCBA"; // Пример данных публичного ключа
+    const publicKey = "0x9876543210FEDCBA"; // Exapmle data of public key by oracle
 
     await hubContract.connect(owner).registerPubKeyOracle(publicKey);
     const registeredPublicKey = await hubContract.registeredKeys(owner.address);
@@ -63,7 +63,7 @@ describe("Hub Contract", function () {
   });
 
   it("should send EIM to Oracle", async function () {
-    const encryptedData = "0xencrypteddata"; // Пример зашифрованных данных
+    const encryptedData = "0xencrypteddata"; // Example of encrypted data
 
     await hubContract.connect(owner).sendEIMtoOracle(encryptedData);
     // Add assertions or checks as needed after this action
@@ -75,7 +75,7 @@ describe("Hub Contract", function () {
   });
 
   it("should send EIM to Heir", async function () {
-    const encryptedData = "0xencrypteddata"; // Пример зашифрованных данных
+    const encryptedData = "0xencrypteddata"; // Example of encrypted data
 
     await hubContract.connect(oracle).sendEIMtoHeir(heir.address, encryptedData);
     // Add assertions or checks as needed after this action
