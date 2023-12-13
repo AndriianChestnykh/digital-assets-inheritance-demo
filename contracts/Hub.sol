@@ -9,12 +9,31 @@ contract Hub {
         uint256 requestedAt;
     }
 
-    // todo Should be more than one inheritance process per heir
     mapping (address => Request) public requests;
+    mapping (address => bytes) public registeredKeys;
 
+    event PublicKeyRegistered(address indexed user, bytes publicKey);
     event MessageRequestedToPublish(address indexed heir);
     event MessageDemandNotToPublish(address indexed heir, address indexed requester);
     event MessagePublished(address indexed heir, string message);
+    event EIMSentToOracle(address indexed owner, bytes encryptedData);
+    event EIMRequestedByHeir(address indexed heir);
+    event EIMSentToHeir(address indexed heir, bytes encryptedData);
+
+    function registerPubKeyOwner(bytes calldata publicKey) public {
+        registeredKeys[msg.sender] = publicKey;
+        emit PublicKeyRegistered(msg.sender, publicKey);
+    }
+
+    function registerPubKeyHeir(address heir, bytes calldata publicKey) public {
+        registeredKeys[heir] = publicKey;
+        emit PublicKeyRegistered(heir, publicKey);
+    }
+
+    function registerPubKeyOracle(bytes calldata publicKey) public {
+        registeredKeys[msg.sender] = publicKey;
+        emit PublicKeyRegistered(msg.sender, publicKey);
+    }
 
     function requestToPublish() public {
         requests[msg.sender].requested = true;
@@ -22,16 +41,26 @@ contract Hub {
         emit MessageRequestedToPublish(msg.sender);
     }
 
-    // anyone can demand not to publish, the contract does not know the owner
-    // it is up to publisher to decide whether to publish or not
     function demandNotToPublish(address heir) public {
         emit MessageDemandNotToPublish(heir, msg.sender);
     }
 
     function publish(address heir, string calldata message) public {
-//        require(requests[heir].requested, "The heir has not requested to publish.");
-//        require(block.timestamp >= requests[heir].requestedAt + GRACE_PERIOD, "The grace period has not ended yet.");
-//        delete requests[heir];
         emit MessagePublished(heir, message);
+    }
+
+    function sendEIMtoOracle(bytes calldata encryptedData) public {
+        require(registeredKeys[msg.sender].length > 0, "Owner public key not registered");
+        emit EIMSentToOracle(msg.sender, encryptedData);
+    }
+
+    function requestEIMDiscover() public {
+        require(registeredKeys[msg.sender].length > 0, "Heir public key not registered");
+        emit EIMRequestedByHeir(msg.sender);
+    }
+
+    function sendEIMtoHeir(address heir, bytes calldata encryptedData) public {
+        require(registeredKeys[msg.sender].length > 0, "Oracle public key not registered");
+        emit EIMSentToHeir(heir, encryptedData);
     }
 }
