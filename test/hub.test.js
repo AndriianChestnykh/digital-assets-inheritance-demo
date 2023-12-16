@@ -54,13 +54,6 @@
         expect(registeredPublicKey.toLowerCase()).to.equal(expectedPublicKey.toLowerCase());
     });
 
-    it("should request message to publish", async function () {
-        await hubContract.connect(heir).requestToPublish();
-        const request = await hubContract.requests(heir.address);
-
-        expect(request.requested).to.equal(true);
-    });
-
     it("should demand not to publish message", async function () {
         await hubContract.connect(heir).demandNotToPublish(heir.address);
         // Add assertions or checks as needed after this action

@@ -35,12 +35,6 @@ contract Hub {
         emit PublicKeyRegistered(msg.sender, publicKey);
     }
 
-    function requestToPublish() public {
-        requests[msg.sender].requested = true;
-        requests[msg.sender].requestedAt = block.timestamp;
-        emit MessageRequestedToPublish(msg.sender);
-    }
-
     function demandNotToPublish(address heir) public {
         emit MessageDemandNotToPublish(heir, msg.sender);
     }
