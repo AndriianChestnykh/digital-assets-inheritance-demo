@@ -13,9 +13,6 @@ contract Hub {
     mapping (address => bytes) public registeredKeys;
 
     event PublicKeyRegistered(address indexed user, bytes publicKey);
-    event MessageRequestedToPublish(address indexed heir);
-    event MessageDemandNotToPublish(address indexed heir, address indexed requester);
-    event MessagePublished(address indexed heir, string message);
     event EIMSentToOracle(address indexed owner, bytes encryptedData);
     event EIMRequestedByHeir(address indexed heir);
     event EIMSentToHeir(address indexed heir, bytes encryptedData);
