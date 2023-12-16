@@ -54,18 +54,6 @@
         expect(registeredPublicKey.toLowerCase()).to.equal(expectedPublicKey.toLowerCase());
     });
 
-    it("should demand not to publish message", async function () {
-        await hubContract.connect(heir).demandNotToPublish(heir.address);
-        // Add assertions or checks as needed after this action
-    });
-
-    it("should publish message", async function () {
-        const message = "Test message";
-
-        await hubContract.connect(oracle).publish(heir.address, message);
-        // Add assertions or checks as needed after this action
-    });
-
     it("should send EIM to Oracle", async function () {
         const publicKey = "0x0123456789ABCDEF"; // Example public key
         await hubContract.connect(owner).registerPubKeyOwner(publicKey); // Register owner's public key

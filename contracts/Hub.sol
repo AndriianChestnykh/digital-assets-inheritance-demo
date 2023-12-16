@@ -32,14 +32,6 @@ contract Hub {
         emit PublicKeyRegistered(msg.sender, publicKey);
     }
 
-    function demandNotToPublish(address heir) public {
-        emit MessageDemandNotToPublish(heir, msg.sender);
-    }
-
-    function publish(address heir, string calldata message) public {
-        emit MessagePublished(heir, message);
-    }
-
     function sendEIMtoOracle(bytes calldata encryptedData) public {
         require(registeredKeys[msg.sender].length > 0, "Owner public key not registered");
         emit EIMSentToOracle(msg.sender, encryptedData);
