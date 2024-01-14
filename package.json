@@ -14,7 +14,7 @@
     "hardhat:compile:force": "hardhat compile --force",
     "hardhat:deploy": "hardhat run scripts/deploy.js --network localhost",
     "hardhat:test": "hardhat test",
-    "hardhat:test:hub": "hardhat test test/hub.test.js",
+    "hardhat:test:hub": "hardhat test test/hub/hub.test.js test/hub/pubKeyRegistration.test.js",
     "hardhat:test:gas": "REPORT_GAS=true hardhat test"
   },
   "author": "Andriian Chestnykh",

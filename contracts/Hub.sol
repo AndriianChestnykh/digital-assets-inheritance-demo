@@ -41,6 +41,20 @@ contract Hub {
         emit PublicKeyRegistered(msg.sender, publicKey);
     }
 
+    //Function for getting public keys
+    
+    function getPubKey(address _address) public view returns (bytes memory){
+        require(registeredKeys[_address].length == 64, "This user did not register the key");
+        return registeredKeys[_address];
+    }
+
+    // Function generate Inheritance Message
+
+    function generateInheritanceMessage() public pure returns (string memory){
+        string memory inheritanceMeassage = "Hello World!";
+        return inheritanceMeassage;
+    }
+
     function sendEIMtoOracle(address heirAddress, bytes calldata encryptedData) public {
         require(registeredKeys[msg.sender].length > 0, "Owner public key not registered");
         emit EIMSentToOracle(msg.sender, heirAddress, encryptedData);
