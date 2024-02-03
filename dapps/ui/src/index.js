@@ -170,6 +170,78 @@ async function onClickSignTypedData() {
   }
 }
 
+function compressKey(key) {
+    const hash = crypto.createHash('sha256').update(key).digest();
+    const changedSizeKey = hash.toString('hex').slice(0, 64);
+    return Buffer.from(changedSizeKey, 'hex');
+}
+
+function encryptIM(message, senderPrivateKey, recipientPrivateKey) {
+    const constants = {
+        // Symmetric cipher for private key encryption
+        cipher: "aes-256-ctr",
+      
+        // Initialization vector size in bytes
+        ivBytes: 16,
+      
+        // ECDSA private key size in bytes
+        keyBytes: 32,
+      
+        // Key derivation function parameters
+        scrypt: {
+          memory: 280000000,
+            dklen: 54,
+            n: 262144,
+            r: 8,
+            p: 1
+        }
+    };
+
+    return new Promise((resolve, reject) => {
+        const shortPrivateKeySender = compressKey(senderPrivateKey);
+        const senderPublicKey = sodium.crypto_scalarmult_base(shortPrivateKeySender);
+
+        const shortPrivateKeyRecipient = compressKey(recipientPrivateKey);
+        const recipientPublicKey = sodium.crypto_scalarmult_base(shortPrivateKeyRecipient);
+
+        const senderSharedSecret = sodium.crypto_scalarmult(shortPrivateKeySender, recipientPublicKey);
+        const recipientSharedSecret = sodium.crypto_scalarmult(shortPrivateKeyRecipient, senderPublicKey);
+
+        const iv1 = crypto.randomBytes(constants.ivBytes);
+        const iv2 = iv1;
+
+        const cipher = crypto.createCipheriv(constants.cipher, senderSharedSecret, iv1);
+        const decipher = crypto.createDecipheriv(constants.cipher, recipientSharedSecret, iv2);
+
+        let encrypted = '';
+        cipher.on('readable', () => {
+            let chunk;
+            while (null !== (chunk = cipher.read())) {
+                encrypted += chunk.toString('hex');
+            }
+        });
+
+        cipher.on('end', () => {
+            resolve(encrypted);
+        });
+
+        cipher.on('error', (error) => {
+            reject(error);
+        });
+
+        cipher.write(message);
+        cipher.end();
+    });
+}
+
+encryptIM(exampleMessage, privateKeys.Owner, privateKeys.Heir)
+    .then((encryptedData) => {
+        console.log('Returned Encrypted Data:', encryptedData);
+    })
+    .catch((error) => {
+        console.error('Encryption failed:', error);
+    });
+
 async function sendIMToOracle() {
   const url = "http://localhost:8080/"
   const data = signTypedDataResult.innerHTML
