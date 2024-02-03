@@ -22,22 +22,23 @@ describe("Hub Contract", function () {
 
         hubContract = await Hub.deploy();
         await hubContract.deployed();
+
+        const privKeyOwner = Buffer.from('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex');
     });
 
     //0.1 Owner gets Heir public key
 
     it("should return the public key if the user has registered the key", async function () {
-        const publicKey = "0x0123456789ABCDEF"; // Example ppublic key
-    
+        const publicKey = "0x" + "01".repeat(64); // Example ppublic key
+
         await hubContract.connect(owner).registerPubKeyHeir(heir.address, publicKey);
-        
+
         const result = await hubContract.getPubKey(heir.address);
 
         expect(result.toLowerCase()).to.equal(publicKey.toLowerCase());
 
     });
-    
-    
+
     it("should raise an error message if the user has not registered the key", async function () {
         const unregisteredAddress = "0x0123456789ABCDEF0123456789ABCDEF01234567"; // Example of an unregistered address
 
@@ -50,7 +51,7 @@ describe("Hub Contract", function () {
         const result = await hubContract.generateInheritanceMessage();
         expect(result).to.equal("Hello World!");
     });
-    
+
     //1. Owner encrypts (DH with Owner + Heir): DH_O_H(IM) - EIM
 
     alice.privateKey = Buffer.from('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex');
@@ -70,7 +71,9 @@ describe("Hub Contract", function () {
         // //2. Owner gets Oracle public key
         // //3. Owner encrypts (DH with Owner + Oracle): DH_O_Or(DH_O_H(IM)) - EIM
 
-        const publicKey = "0x0123456789ABCDEF"; // Example public key
+        // TODO finalize the encryption process
+        const publicKey = sodium.crypto_scalarmult_base(alice.privateKey)
+
         await hubContract.connect(owner).registerPubKeyOwner(publicKey); // Register owner's public key
 
         const heirAddress = heir.address;
