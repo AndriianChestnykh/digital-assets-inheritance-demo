@@ -13,11 +13,20 @@ contract Hub {
     mapping (address => bytes) public registeredKeys;
 
     event PublicKeyRegistered(address indexed user, bytes publicKey);
-    event EIMSentToOracle(address indexed owner, bytes encryptedData);
+    event EIMSentToOracle(address indexed owner, address indexed heir, bytes encryptedData);
     event EIMRequestedByHeir(address indexed heir);
     event EIMSentToHeir(address indexed heir, bytes encryptedData);
 
     function registerPubKeyOwner(bytes calldata publicKey) public {
+        // TODO apply the check, convert to modifier
+
+        //        // Check that the public key is of the correct length (64 bytes for uncompressed Ethereum public keys)
+        //        require(publicKey.length == 64, "Invalid public key length");
+        //
+        //        // Compute the address by taking the last 20 bytes of the keccak256 hash of the public key
+        //        bytes32 hash = keccak256(publicKey);
+        //        require(msg.sender = address(uint160(uint256(hash)));
+
         registeredKeys[msg.sender] = publicKey;
         emit PublicKeyRegistered(msg.sender, publicKey);
     }
@@ -28,13 +37,28 @@ contract Hub {
     }
 
     function registerPubKeyOracle(bytes calldata publicKey) public {
+        require(registeredKeys[_address].length == 32, "This user did not register the key");
         registeredKeys[msg.sender] = publicKey;
         emit PublicKeyRegistered(msg.sender, publicKey);
     }
 
-    function sendEIMtoOracle(bytes calldata encryptedData) public {
+    //Function for getting public keys
+
+    function getPubKey(address _address) public view returns (bytes memory){
+        require(registeredKeys[_address].length != 0, "This user did not register the key");
+        return registeredKeys[_address];
+    }
+
+    // Function generate Inheritance Message
+
+    function generateInheritanceMessage() public pure returns (string memory){
+        string memory inheritanceMeassage = "Hello World!";
+        return inheritanceMeassage;
+    }
+
+    function sendEIMtoOracle(address heirAddress, bytes calldata encryptedData) public {
         require(registeredKeys[msg.sender].length > 0, "Owner public key not registered");
-        emit EIMSentToOracle(msg.sender, encryptedData);
+        emit EIMSentToOracle(msg.sender, heirAddress, encryptedData);
     }
 
     function requestEIMDiscover() public {
