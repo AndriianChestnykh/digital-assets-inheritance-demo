@@ -1,4 +1,4 @@
-import { ethers } from "ethers"
+import { ethers } from "ethers";
 
 import './index.css';
 
@@ -576,4 +576,4 @@ updateAccountButton.onclick = onClickUpdateAccount
 
 window.addEventListener('DOMContentLoaded', initialize)
 
-
+module.exports = {encryptIM, decryptIM}
