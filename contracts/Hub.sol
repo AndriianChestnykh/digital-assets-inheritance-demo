@@ -12,6 +12,8 @@ contract Hub {
     mapping (address => Request) public requests;
     mapping (address => bytes) public registeredKeys;
 
+    mapping (address => bool) public isHeir;
+
     event PublicKeyRegistered(address indexed user, bytes publicKey);
     event EIMSentToOracle(address indexed owner, address indexed heir, bytes encryptedData);
     event EIMRequestedByHeir(address indexed heir);
@@ -33,6 +35,7 @@ contract Hub {
 
     function registerPubKeyHeir(address heir, bytes calldata publicKey) public {
         registeredKeys[heir] = publicKey;
+        isHeir[msg.sender] = true;
         emit PublicKeyRegistered(heir, publicKey);
     }
 
@@ -69,5 +72,11 @@ contract Hub {
     function sendEIMtoHeir(address heir, bytes calldata encryptedData) public {
         require(registeredKeys[msg.sender].length > 0, "Oracle public key not registered");
         emit EIMSentToHeir(heir, encryptedData);
+    }
+
+    function getPublicKeyHeir(string memory heirAddressStr) public view returns (bytes memory) {
+        address heirAddress = address(bytes20(bytes(heirAddressStr)));
+        require(isHeir[heirAddress], "Addres is not Heir");
+        return registeredKeys[heirAddress];
     }
 }

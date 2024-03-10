@@ -28,15 +28,18 @@
     "crypto": "^1.0.1",
     "css-loader": "^6.8.1",
     "eth-sig-util": "^3.0.1",
+    "fs": "^0.0.1-security",
     "hardhat": "^2.12.7",
     "mini-css-extract-plugin": "^2.7.6",
     "mocha": "^10.3.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "secp256k1": "^5.0.0",
     "serve": "^14.2.0",
     "sodium": "^3.0.2",
     "style-loader": "^3.3.3",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "yaml": "^2.3.4"
   }
 }

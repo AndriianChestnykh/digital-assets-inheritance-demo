@@ -1,12 +1,13 @@
-import { ethers } from "ethers";
-
+import { ethers } from 'ethers'
 import './index.css';
 
 import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
+import HubArtifact from '../../../artifacts/contracts/Hub.sol/Hub.json'
 import DeployInfo from '../../../deployInfo.json'
 import { splitSignature } from "ethers/lib/utils";
 
 const { abi: walletAbi } = WalletArtifact
+const { abi: hubAbi } = HubArtifact
 
 let wallet;
 let accounts
@@ -70,6 +71,12 @@ const btnClosedPopup = document.getElementById('btn-close-popup')
 const popupText = document.getElementById('popup-text')
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+const hubProvider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+const hubAddress = DeployInfo.hubAddress
+
+const hubContract = new ethers.Contract(hubAbi, hubAddress, hubProvider)
+
 
 let walletInfo = {
   ownershipStatus: undefined,
@@ -136,6 +143,19 @@ async function onClickSignTypedData() {
   const signer = provider.getSigner(_accounts[0])
   const heirAddress = document.getElementById('heirAddress')
   const heir = provider.getSigner(heirAddress.value)
+
+  //todo - get public key from heir
+  async function getPublicKeyFromHeir(address) {
+    try {
+      const publicKey = await hubContract.getPublicKeyHeir(address)
+      return publicKey
+    } catch {
+      console.error("Error getting public key:", error)
+      return null
+    }
+  }
+
+  const publicKeyHeir = getPublicKeyFromHeir(heirAddress.value)
 
   const im = {
     types: {
@@ -559,6 +579,8 @@ const initialize = async () => {
 
   updateButtons()
 }
+
+getGreetingFromContractHub()
 
 // assign events
 connectWalletButton.onclick = onClickConnectWallet
