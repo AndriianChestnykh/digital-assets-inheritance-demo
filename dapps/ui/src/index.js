@@ -1,6 +1,4 @@
 import { ethers } from 'ethers'
-import {secp256k1} from 'secp256k1'
-
 import './index.css';
 
 import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
@@ -600,4 +598,4 @@ updateAccountButton.onclick = onClickUpdateAccount
 
 window.addEventListener('DOMContentLoaded', initialize)
 
-
+module.exports = {encryptIM, decryptIM}

@@ -1,13 +1,19 @@
-    const { expect } = require("chai");
-    const { ethers } = require("hardhat");
-    const { utils } = require("ethers");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const { utils } = require("ethers");
 
-    describe("Hub Contract", function () {
+describe("Hub Contract", function () {
     let Hub;
     let hubContract;
     let owner;
     let heir;
     let oracle;
+
+    const privateKeys = {
+        Owner: Buffer.from('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex'),
+        Heir: Buffer.from('0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d', 'hex'),
+        Oracle: Buffer.from('0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a', 'hex'),
+    }
 
     before(async function () {
         Hub = await ethers.getContractFactory("Hub");
@@ -17,52 +23,38 @@
         hubContract = await Hub.deploy();
         await hubContract.deployed();
 
-        //TODO register public key for owner, heir, oracle
+        const privKeyOwner = Buffer.from('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex');
     });
-
-    // -------------- START: TODO consider moving this to a separate file----------------
-
-    // owner key registration testing
-    it("should register public key for owner", async function () {
-        const expectedPublicKey = "0x0123456789ABCDEF"; // Expected public key value by owner
-
-        await hubContract.connect(owner).registerPubKeyOwner(expectedPublicKey);
-        const registeredPublicKey = await hubContract.registeredKeys(owner.address);
-
-
-        const expectedKeyLower = expectedPublicKey.toLowerCase();
-        const actualKeyLower = registeredPublicKey.toLowerCase();
-
-        expect(actualKeyLower).to.equal(expectedKeyLower);
-    });
-
-    // heir key registration testing
-    it("should register public key for heir", async function () {
-        const expectedPublicKey = "0xABCDEF0123456789"; // Expected public key value by heir
-
-        await hubContract.connect(owner).registerPubKeyHeir(heir.address, expectedPublicKey);
-        const registeredPublicKey = await hubContract.registeredKeys(heir.address);
-
-        const expectedKeyLower = expectedPublicKey.toLowerCase();
-        const actualKeyLower = registeredPublicKey.toLowerCase();
-
-        expect(actualKeyLower).to.equal(expectedKeyLower);
-    });
-
-    //oracle key registration testing
-    it("should register public key for oracle", async function () {
-        const expectedPublicKey = "0x9876543210FEDCBA"; // Expected public key value by oracle
-
-        await hubContract.connect(owner).registerPubKeyOracle(expectedPublicKey);
-        const registeredPublicKey = await hubContract.registeredKeys(owner.address);
-
-        expect(registeredPublicKey.toLowerCase()).to.equal(expectedPublicKey.toLowerCase());
-    });
-        // ----------- END: TODO consider moving this to a separate file-------------------
 
     //0.1 Owner gets Heir public key
+
+    it("should return the public key if the user has registered the key", async function () {
+        const publicKey = "0x" + "01".repeat(64); // Example ppublic key
+
+        await hubContract.connect(owner).registerPubKeyHeir(heir.address, publicKey);
+
+        const result = await hubContract.getPubKey(heir.address);
+
+        expect(result.toLowerCase()).to.equal(publicKey.toLowerCase());
+
+    });
+
+    it("should raise an error message if the user has not registered the key", async function () {
+        const unregisteredAddress = "0x0123456789ABCDEF0123456789ABCDEF01234567"; // Example of an unregistered address
+
+        await expect(hubContract.getPubKey(unregisteredAddress))
+            .to.be.revertedWith("This user did not register the key");
+    });
     //0.2 Owner generates IM
+
+    it ("should return 'Hello World!' from generateInheritanceMessage", async function() {
+        const result = await hubContract.generateInheritanceMessage();
+        expect(result).to.equal("Hello World!");
+    });
+
     //1. Owner encrypts (DH with Owner + Heir): DH_O_H(IM) - EIM
+
+    alice.privateKey = Buffer.from('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex');
     //2. Owner gets Oracle public key
     //3. Owner encrypts (DH with Owner + Oracle): DH_O_Or(DH_O_H(IM)) - EIM
     //2. Owner sends DH_O_Or(DH_O_H(IM)) to Oracle
@@ -79,7 +71,9 @@
         // //2. Owner gets Oracle public key
         // //3. Owner encrypts (DH with Owner + Oracle): DH_O_Or(DH_O_H(IM)) - EIM
 
-        const publicKey = "0x0123456789ABCDEF"; // Example public key
+        // TODO finalize the encryption process
+        const publicKey = sodium.crypto_scalarmult_base(alice.privateKey)
+
         await hubContract.connect(owner).registerPubKeyOwner(publicKey); // Register owner's public key
 
         const heirAddress = heir.address;
@@ -123,4 +117,4 @@
 
         // TODO //6. Heir decrypts DH_O_H(IM) and gets IM. Check if the IM is correct.
         //const filter ...
-    });
+});
