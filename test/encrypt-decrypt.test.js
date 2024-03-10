@@ -1,6 +1,8 @@
 const { expect } = require("chai");
-const encryptIM = require("./../dapps/utils/encryp-im/encrypt-im.js");
-const decryptIM = require("./../dapps/utils/decrypt-im/decrypt-im.js");
+const { ethers } = require("hardhat");
+const { utils } = require("ethers");
+const encryptIM = require("./../dapps/utils/encrypt-im.js");
+const decryptIM = require("./../dapps/utils/decrypt-im.js");
 
 const accounts = {
     Owner: {
@@ -33,4 +35,37 @@ describe("Encryption and Decryption", function () {
         // Check if the decrypted message matches the original message
         expect(decryptedMessage).to.equal(message);
     });
+
+    it("should encrypt the message, send it to Oracle, Oracle should decrypt it", async function () {
+        const message = "Hello, world!";
+
+        // Encrypting a message from Owner to Heir
+        const encryptedMessage = await encryptIM(message, accounts.Owner.privateKey, accounts.Heir.publicKey);
+
+        // Owner encrypting message for Oracle and send it
+        const encryptedMessageForOracle = await encryptIM(encryptedMessage, accounts.Owner.privateKey, accounts.Oracle.publicKey);
+
+        // Oracle gets encrypted message from Owner and decrypted it
+        const decryptedMessageFromOwnerToOracle = await decryptIM(encryptedMessageForOracle, accounts.Oracle.privateKey, accounts.Owner.publicKey)
+
+        expect(decryptedMessageFromOwnerToOracle).to.equal(encryptedMessage)
+    })
+    
+    it("create new account using ether.js and private key", async function () {
+        const message = "Hello, world!";
+
+        // Encrypting a message from Owner to Heir
+        const encryptedMessage = await encryptIM(message, accounts.Owner.privateKey, accounts.Heir.publicKey);
+
+        // Owner encrypting message for Oracle and send it
+        const encryptedMessageForOracle = await encryptIM(encryptedMessage, accounts.Owner.privateKey, accounts.Oracle.publicKey);
+
+        // Oracle gets encrypted message from Owner and decrypted it
+        const decryptedMessageFromOwnerToOracle = await decryptIM(encryptedMessageForOracle, accounts.Oracle.privateKey, accounts.Owner.publicKey)
+
+        // Heir gets encrypt message from Oracle
+        const decryptedMessageFromOwnetToHeir = await decryptIM(decryptedMessageFromOwnerToOracle, accounts.Heir.privateKey, accounts.Owner.publicKey)
+        
+        expect(decryptedMessageFromOwnetToHeir).to.equal(message)
+    })
 });

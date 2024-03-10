@@ -1,7 +1,7 @@
-const compressKey = require("./../compress-key/compress-key.js");
+const compressKey = require("./compress-key.js");
 const sodium = require('sodium').api;
 const crypto = require('crypto');
-const cryptoConfigConstant = require("./../crypto-config-constant.js");
+const cryptoConfigConstant = require("./crypto-config-constant.js");
 
 async function encryptIM(message, senderPrivateKey, recipientPublicKey) {
     return new Promise((resolve, reject) => {
