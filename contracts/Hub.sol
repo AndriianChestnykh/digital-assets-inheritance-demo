@@ -37,7 +37,6 @@ contract Hub {
     }
 
     function registerPubKeyOracle(bytes calldata publicKey) public {
-        require(registeredKeys[_address].length == 32, "This user did not register the key");
         registeredKeys[msg.sender] = publicKey;
         emit PublicKeyRegistered(msg.sender, publicKey);
     }

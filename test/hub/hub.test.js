@@ -54,7 +54,7 @@ describe("Hub Contract", function () {
 
     //1. Owner encrypts (DH with Owner + Heir): DH_O_H(IM) - EIM
 
-    alice.privateKey = Buffer.from('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex');
+    // alice.privateKey = Buffer.from('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', 'hex');
     //2. Owner gets Oracle public key
     //3. Owner encrypts (DH with Owner + Oracle): DH_O_Or(DH_O_H(IM)) - EIM
     //2. Owner sends DH_O_Or(DH_O_H(IM)) to Oracle
@@ -72,8 +72,15 @@ describe("Hub Contract", function () {
         // //3. Owner encrypts (DH with Owner + Oracle): DH_O_Or(DH_O_H(IM)) - EIM
 
         // TODO finalize the encryption process
-        const publicKey = sodium.crypto_scalarmult_base(alice.privateKey)
+        // const publicKey = sodium.crypto_scalarmult_base(alice.privateKey)
 
+        // await hubContract.connect(owner).registerPubKeyOwner(publicKey); // Register owner's public key
+
+        // const heirAddress = heir.address;
+        // const encryptedData = utils.toUtf8Bytes("0xencrypteddata");
+        // await hubContract.connect(owner).sendEIMtoOracle(heirAddress, encryptedData);
+
+        const publicKey = "0x0123456789ABCDEF"; // Example public key
         await hubContract.connect(owner).registerPubKeyOwner(publicKey); // Register owner's public key
 
         const heirAddress = heir.address;
