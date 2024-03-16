@@ -72,11 +72,8 @@ const popupText = document.getElementById('popup-text')
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
-const hubProvider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
 const hubAddress = DeployInfo.hubAddress
-
-const hubContract = new ethers.Contract(hubAbi, hubAddress, hubProvider)
-
+const hubContract = new ethers.Contract(hubAddress, hubAbi, provider)
 
 let walletInfo = {
   ownershipStatus: undefined,
@@ -144,18 +141,18 @@ async function onClickSignTypedData() {
   const heirAddress = document.getElementById('heirAddress')
   const heir = provider.getSigner(heirAddress.value)
 
-  //todo - get public key from heir
-  async function getPublicKeyFromHeir(address) {
-    try {
-      const publicKey = await hubContract.getPublicKeyHeir(address)
-      return publicKey
-    } catch {
-      console.error("Error getting public key:", error)
-      return null
-    }
-  }
-
-  const publicKeyHeir = getPublicKeyFromHeir(heirAddress.value)
+  // //todo - get public key from heir
+  // async function getPublicKeyFromHeir(address) {
+  //   try {
+  //     const publicKey = await hubContract.getPublicKeyHeir(address)
+  //     return publicKey
+  //   } catch {
+  //     console.error("Error getting public key:", error)
+  //     return null
+  //   }
+  // }
+  //
+  // const publicKeyHeir = getPublicKeyFromHeir(heirAddress.value)
 
   const im = {
     types: {
@@ -194,6 +191,8 @@ async function sendIMToOracle() {
   const url = "http://localhost:8080/"
   const data = signTypedDataResult.innerHTML
 
+  // TODO encrypt the data before sending it to Oracle
+
   const options = {
     method: 'POST',
     body: JSON.stringify(JSON.parse(data)),
@@ -216,6 +215,9 @@ async function sendIMToOracle() {
 async function getIMFromOracle() {
   const response = await fetch('http://localhost:8080')
   const data = await response.json()
+
+  //TODO decrypt the data from Oracle
+
   signedTypedDataFromOwnerDiv.value = JSON.stringify(data)
   onChangeSignedTypedDataFromOwner()
 }
@@ -579,8 +581,6 @@ const initialize = async () => {
 
   updateButtons()
 }
-
-getGreetingFromContractHub()
 
 // assign events
 connectWalletButton.onclick = onClickConnectWallet
