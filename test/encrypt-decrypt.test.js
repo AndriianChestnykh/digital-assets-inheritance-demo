@@ -1,8 +1,11 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const { utils } = require("ethers");
-const encryptIM = require("./../dapps/utils/encrypt-im.js");
-const decryptIM = require("./../dapps/utils/decrypt-im.js");
+// const encryptIM = require("./../dapps/utils/encrypt-im.js");
+// const decryptIM = require("./../dapps/utils/decrypt-im.js");
+
+const encryptIM = require("./../dapps/utils/encrypt-im-browser-version.js");
+const decryptIM = require("./../dapps/utils/decrypt-im-browser-version.js");
 
 const accounts = {
     Owner: {
@@ -23,7 +26,7 @@ const accounts = {
 }
 
 describe("Encryption and Decryption", function () {
-    it("should encrypt and decrypt the message", async function () {
+    it("should encrypt and decrypt the message (new functions)", async function () {
         const message = "Hello, world!";
 
         // Encrypting a message from Owner to Heir
