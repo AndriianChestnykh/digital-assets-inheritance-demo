@@ -17,6 +17,8 @@ async function encryptIM(message, senderPrivateKey, recipientPublicKey) {
 
             const senderSharedSecret = new Uint8Array(sodium.crypto_scalarmult_BYTES);
 
+            sodium.crypto_scalarmult_base
+
             sodium.crypto_scalarmult(senderSharedSecret, shortPrivateKeySender, shortPublicKeyRecipient);
 
             const senderSharedSecretHex = Array.prototype.map.call(senderSharedSecret, x => ('00' + x.toString(16)).slice(-2)).join('');
