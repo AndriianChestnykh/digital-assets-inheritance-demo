@@ -82,7 +82,7 @@ describe("Encryption and Decryption", function () {
         expect(decryptedMessageFromOwnerToOracle).to.equal(encryptedMessage)
     })
 
-    it("create new account using ether.js and private key", async function () {
+    it("should encrypt the message, send it to Oracle, Oracle should encrypt and send it Heir, Heir should decrypt it from Oracle and decrypt it from Owner ", async function () {
         const message = "Hello, world!";
 
         // Encrypting a message from Owner to Heir

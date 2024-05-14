@@ -1,6 +1,3 @@
-// const compressKey = require('./compress-key.js');
-
-const compressKey = require('./compress-key-browser-version.js');
 const sodium = require('sodium-universal');
 const CryptoJS = require('crypto-js');
 const cryptoConfigConstant = require('./crypto-config-constant.js');
@@ -8,6 +5,19 @@ const cryptoConfigConstant = require('./crypto-config-constant.js');
 async function encryptIM(message, senderPrivateKey, recipientPublicKey) {
     return new Promise((resolve, reject) => {
         try {
+
+            if (typeof message === 'object') {
+                message = JSON.stringify(message);
+            }
+
+            if (senderPrivateKey.startsWith("0x")) {
+                senderPrivateKey = senderPrivateKey.substring(2);
+            }
+
+            if (recipientPublicKey.startsWith("0x")) {
+                recipientPublicKey = recipientPublicKey.substring(2);
+            }
+
             const privKeyBuf = Uint8Array.from(senderPrivateKey.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
             const pubKeyBuf = Uint8Array.from(recipientPublicKey.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
 
