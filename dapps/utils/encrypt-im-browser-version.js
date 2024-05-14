@@ -8,25 +8,15 @@ const cryptoConfigConstant = require('./crypto-config-constant.js');
 async function encryptIM(message, senderPrivateKey, recipientPublicKey) {
     return new Promise((resolve, reject) => {
         try {
-            if (typeof message === 'object') {
-                message = JSON.stringify(message);
-            }
+            const privKeyBuf = Uint8Array.from(senderPrivateKey.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+            const pubKeyBuf = Uint8Array.from(recipientPublicKey.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
 
-            const shortPrivateKeySender = compressKey(senderPrivateKey);
-            const shortPublicKeyRecipient = compressKey(recipientPublicKey);
+            const sharedSecret = new Uint8Array(sodium.crypto_scalarmult_BYTES);
+            sodium.crypto_scalarmult(sharedSecret, privKeyBuf, pubKeyBuf);
 
-            const senderSharedSecret = new Uint8Array(sodium.crypto_scalarmult_BYTES);
-
-            sodium.crypto_scalarmult_base
-
-            sodium.crypto_scalarmult(senderSharedSecret, shortPrivateKeySender, shortPublicKeyRecipient);
-
-            const senderSharedSecretHex = Array.prototype.map.call(senderSharedSecret, x => ('00' + x.toString(16)).slice(-2)).join('');
-
+            const senderSharedSecretHex = Array.prototype.map.call(sharedSecret, x => ('00' + x.toString(16)).slice(-2)).join('');
             const iv = new Uint8Array(cryptoConfigConstant.ivBytes).fill(0);
-            
             const counter = CryptoJS.lib.WordArray.create('d8d8dae8405c447d86e84be03b71327b');
-
             const encrypted = CryptoJS.AES.encrypt(message, senderSharedSecretHex, {
                 iv: iv,
                 mode: CryptoJS.mode.CTR,
