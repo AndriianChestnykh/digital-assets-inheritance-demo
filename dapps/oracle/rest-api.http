@@ -1,0 +1,21 @@
+POST http://localhost:8080/
+Accept: application/json
+
+{
+  "message": "First message sent on connection"
+}
+###
+
+
+GET http://localhost:8080/
+Accept: application/json
+
+<> 2024-06-02T203841.200.txt
+###
+
+
+
+
+
+
+
