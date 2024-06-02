@@ -51,8 +51,8 @@ describe("Hub Contract", function () {
         it("should register public key for oracle", async function () {
             const expectedPublicKey = "0x9876543210FEDCBA"; // Expected public key value by oracle
     
-            await hubContract.connect(owner).registerPubKeyOracle(expectedPublicKey);
-            const registeredPublicKey = await hubContract.registeredKeys(owner.address);
+            await hubContract.connect(owner).registerPubKeyOracle(oracle.address, expectedPublicKey);
+            const registeredPublicKey = await hubContract.registeredKeys(oracle.address);
     
             expect(registeredPublicKey.toLowerCase()).to.equal(expectedPublicKey.toLowerCase());
         });

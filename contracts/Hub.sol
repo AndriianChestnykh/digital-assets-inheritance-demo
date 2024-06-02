@@ -39,9 +39,9 @@ contract Hub {
         emit PublicKeyRegistered(heir, publicKey);
     }
 
-    function registerPubKeyOracle(bytes calldata publicKey) public {
-        registeredKeys[msg.sender] = publicKey;
-        emit PublicKeyRegistered(msg.sender, publicKey);
+    function registerPubKeyOracle(address oracle, bytes calldata publicKey) public {
+        registeredKeys[oracle] = publicKey;
+        emit PublicKeyRegistered(oracle, publicKey);
     }
 
     //Function for getting public keys
