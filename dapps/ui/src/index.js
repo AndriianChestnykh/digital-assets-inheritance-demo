@@ -186,7 +186,9 @@ async function onClickSignTypedData() {
       signature: imSignature,
     }
 
-    const encryptedIM = await encryptIM(imWithSignature, accounts1.Owner.privateKey, accounts1.Heir.publicKey);
+    const heirPubKey = await hubContract.getPubKey(heirAddress.value);
+
+    const encryptedIM = await encryptIM(imWithSignature, accounts1.Owner.privateKey, heirPubKey);
 
     console.log("Inheritans message:", encryptedIM)
 
