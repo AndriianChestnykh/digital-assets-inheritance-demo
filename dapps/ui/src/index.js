@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import encryptIM from './../../utils/encrypt-im-browser-version.js';
+import decryptIM from './../../utils/decrypt-im-browser-version.js';
 import './index.css';
 
 import WalletArtifact from '../../../artifacts/contracts/Wallet.sol/Wallet.json'
@@ -190,8 +191,6 @@ async function onClickSignTypedData() {
 
     const encryptedIM = await encryptIM(imWithSignature, accounts1.Owner.privateKey, heirPubKey);
 
-    console.log("Inheritans message:", encryptedIM)
-
     // signTypedDataResult.innerHTML = JSON.stringify(imWithSignature, null, 2)
     signTypedDataResult.innerHTML = JSON.stringify(encryptedIM, null, 2)
     sendIMToOracleButton.disabled = false
@@ -209,6 +208,7 @@ async function sendIMToOracle() {
   const options = {
     method: 'POST',
     body: JSON.stringify(JSON.parse(data)),
+    // body: data,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -217,7 +217,7 @@ async function sendIMToOracle() {
   try {
     await fetch(url, options)
     sendIMToOracleLabel.style.color = 'green'
-    sendIMToOracleLabel.innerText = 'IM sent to Oracle'
+    sendIMToOracleLabel.innerText = 'IM send to Oracle'
   } catch (err) {
     sendIMToOracleLabel.style.color = 'red'
     sendIMToOracleLabel.innerText = 'Error sending IM to Oracle'
@@ -227,11 +227,19 @@ async function sendIMToOracle() {
 
 async function getIMFromOracle() {
   const response = await fetch('http://localhost:8080')
-  const data = await response.json()
+  const data = await response.text()
 
   //TODO decrypt the data from Oracle
 
-  signedTypedDataFromOwnerDiv.value = JSON.stringify(data)
+  const dataParse = JSON.parse(data)
+
+  const senderPubKey = await hubContract.getPubKey(accounts1.Owner.address)
+
+  const decryptedIM = await decryptIM(dataParse, accounts1.Heir.privateKey, senderPubKey)
+
+  const decMsg = JSON.parse(decryptedIM)
+
+  signedTypedDataFromOwnerDiv.value = JSON.stringify(decMsg, null, 2)
   onChangeSignedTypedDataFromOwner()
 }
 
